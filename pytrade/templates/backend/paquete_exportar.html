@@ -1,0 +1,26 @@
+{% extends "basebs.html" %}
+{% load bootstrap3 %}
+
+{% block content %}
+    {% if info %}
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="alert alert-dismissable alert-danger">
+                  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                  {{ info }}
+                </div>
+            </div>
+        </div><!-- /.row -->
+    {% endif %}
+
+     <div class="row">
+        <div class="col-lg-2">
+            <form action="" method="GET">
+                {% bootstrap_form form %}
+                <button type="submit" class="btn btn-primary btn-lg">
+                    {% bootstrap_icon "ok-circle" %} Exportar
+                </button>
+            </form>
+        </div>
+    </div><!-- /.row -->
+{% endblock %}

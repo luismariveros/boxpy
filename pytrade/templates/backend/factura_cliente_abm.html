@@ -1,0 +1,124 @@
+{%extends 'basebs.html' %}
+{% load humanize %}
+{% load bootstrap3 %}
+{% block extra_head %}
+
+
+{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-lg-6">
+            <h3>Generar Factura del Ticket Nro. {{ ticket.id }}</h3>
+        </div>
+    </div><!-- /.row -->
+    <div class="row">
+        <div class="col-lg-4">
+            <form action="" method="POST" onsubmit="return checkRadio();">
+                {% csrf_token %}
+                {% bootstrap_form form %}
+                {% buttons %}
+                    <button type="submit" class="btn btn-primary">
+                        {% bootstrap_icon "ok-circle" %} Guardar e imprimir
+                    </button>
+                {% endbuttons %}
+            </form>
+        </div>
+        <div class="col-lg-6">
+            <div class="panel panel-info">
+                <div class="panel-heading">Lista de Clientes Factura</div>
+                <table class="table" id="tabla_clientes">
+                    <thead>
+                        <tr>
+                            <th class="text-center">#</th>
+                            <th class="text-left">RUC</th>
+                            <th class="text-left">Nombre</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for c in clientes %}
+                            <tr>
+                                <td class="text-center"><input type="radio" value="{{ c.id }}" name="radio_cliente" /></td>
+                                <td class="text-left">{{ c.ruc }}</td>
+                                <td class="text-left">{{ c.nombre }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div class="panel-footer">
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <input class="form-control" id="id_cliente_ruc" name="ruc" placeholder="RUC" type="text" required="required"/>
+                        </div>
+                        <div class="col-xs-4">
+                            <input class="form-control" id="id_cliente_nombre" name="nombre" placeholder="Nombre" type="text" style="text-transform: uppercase" required="required"/>
+                        </div>
+                        <div class="col-xs-4">
+                            <button id="btn_agregar_cliente" class="btn btn-primary"> Agregar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="alertError" style="display: none">
+                <div class="alert alert-danger" data-alert="alert">
+                    <button type="button" class="close" data-dismiss="alert">×</button>
+                    <p>Ya existe el RUC.</p>
+                </div>
+            </div>
+        </div>
+    </div><!-- /.row -->
+{% endblock %}
+
+{% block extra_script %}
+    <script type="text/javascript">
+        $("#btn_agregar_cliente").click(function(){
+            $.ajax({
+                type : 'POST',
+                url:"/backend/webservices/ws_cliente_factura",
+                data: {
+                    'cliente': {{ ticket.user.cliente.id }},
+                    'nombre' : $('#id_cliente_nombre').val(),
+                    'ruc': $('#id_cliente_ruc').val(),
+                    "csrfmiddlewaretoken": $('input[name=csrfmiddlewaretoken]').val()
+                },
+                success:function(res){
+                    if (res.response == "rucduplicado"){
+                        $('#alertError').fadeIn();
+                        $('#id_cliente_ruc').val('');
+                        $('#id_cliente_nombre').val('');
+                    }
+                    if (res.response == "error"){
+                        alert('Disculpe, hubo un error lado del servidor.');
+                    }else{
+                        var html = '<tr>';
+                        jQuery.each(res,function(idx,val){
+                            html += '<td class="text-center">'
+                            html += '<input type="radio" name="radio_cliente" checked="True" value='+val.pk+' />'
+                            html += '</td>'
+                            html += '<td class="text-left">'+val.fields.ruc+'</td>'
+                            html += '<td class="text-left">'+val.fields.nombre+'</td>'
+                            html += '</tr>'
+                            $('#tabla_clientes tbody').append(html);
+                            $('#id_cliente').attr('value',val.pk);
+                        });
+
+                    }
+
+                },
+                error : function(jqXHR, status, error) {
+                    alert('Disculpe, existió un problema. '+jqXHR.responseText);
+                }
+            });
+        });
+        function checkRadio(){
+            if ($('input[name=radio_cliente]:checked').length == 0){
+                alert('Seleccionar Cliente de la Factura');
+                return false;
+            }
+        }
+
+        $('input[type=radio]').change(function(){
+            var id_cliente = $('input[name=radio_cliente]:checked').val()
+            $('#id_cliente').attr('value',id_cliente);
+        });
+    </script>
+{% endblock %}

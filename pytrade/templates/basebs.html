@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+{% load mytags %}
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="courier paraguay asuncion box encomienda pytrade">
+	<meta name="author" content="PyTrade SRL">
+
+    <title>{% block title %}PyTrade - Backend{% endblock %}</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="/media/bootstrap/css/bootstrap.css">
+
+    <!-- Add custom CSS here -->
+    <link rel="stylesheet" href="/media/css/sb-admin.css" >
+    <link rel="stylesheet" href="/media/font-awesome/css/font-awesome.min.css">
+    <!-- Page Specific CSS -->
+{#    <link rel="stylesheet" href="http://cdn.oesmith.co.uk/morris-0.4.3.min.css">#}
+
+    <link rel='icon' href='/media/images/favicon.ico' type='image/x-icon'/>
+
+    <!-- JavaScript -->
+    <script src="/media/js/jquery-1.10.2.js"></script>
+    <script src="/media/bootstrap/js/bootstrap.js"></script>
+
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <div id="wrapper">
+        <!-- Sidebar -->
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="{% url "vista_inicio" %}">Frontend</a>
+                <a class="navbar-brand" href="{% url "vista_backend" %}">Inicio</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse navbar-ex1-collapse">
+                <ul class="nav navbar-nav side-nav">
+                    <li><a href="{% url "vista_busqueda_clientes" 1 %}"><i class="fa fa-ticket"></i> Entregar paquete</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-inbox"></i> Caja <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url 'vista_apertura_caja' %}">Apertura</a></li>
+                            <li><a href="{% url 'vista_caja_abierta' %}">Cierre</a></li>
+                            <li><a href="{% url 'vista_agregar_egreso' %}">Egreso</a></li>
+                            <li><a href="{% url 'vista_lista_caja' %}">Lista</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-cubes"></i> Paquetes <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url 'vista_paquete_agregar' %}"><i class="fa fa-plus"></i> Agregar Paquete</a></li>
+                            <li><a href="{% url 'vista_agrupar_paquetes' %}">Agrupar Paquetes</a></li>
+                            <li><a href="{% url 'vista_lista_paquetes' %}">Lista de Paquetes</a></li>
+                            <li><a href="{% url 'vista_exportar_paquete' %}">Exportar Paquetes CSV</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ticket"></i> Tickets <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url 'vista_lista_tickets' %}"> Lista de Tickets</a></li>
+                            <li><a href="{% url 'vista_cambio_estado_ticket' %}"> Cambio Estado</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-plane"></i> Cargas <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url 'vista_lista_cargas' %}">Lista de Cargas</a></li>
+                            <li><a href="{% url 'vista_importar_carga' %}">Importar Carga</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-file-text-o"></i> Manifiestos <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url 'vista_lista_manifiesto' %}">Lista de Manifiestos</a></li>
+                            <li><a href="{% url 'vista_manifiesto_agregar' %}">Agregar Manifiesto</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-users"></i> Clientes <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url 'vista_lista_clientes' %}"> Lista de Clientes</a></li>
+                            <li><a href="{% url "vista_busqueda_clientes" 3 %}"> Historial Cliente</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-info-circle"></i> Informes <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url 'i_cargas_cliente' %}"> Carga Cliente</a></li>
+                            <li><a href="{% url 'i_ingresos_egresos' %}"> Ingreso-Egreso</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="{% url 'vista_enviar_mail' %}"><i class="fa fa-mail-reply"></i> Envio de Emails</a></li>
+                    <li><a href="{% url 'vista_generar_listado' %}"><i class="fa fa-file-o"></i> Generar Listado</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-shopping-cart"></i> Órdenes de Compras <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url 'vista_agregar_orden_compra' %}">Agregar Compra</a></li>
+                            <li><a href="{% url 'vista_lista_compras' %}">Lista de Pedidos</a></li>
+                            <li><a href="{% url "vista_busqueda_clientes" 2 %}"> Pagar un Pedido</a></li>
+                        </ul>
+                </ul>
+                <ul class="nav navbar-nav navbar-right navbar-user">
+                    <li class="dropdown alerts-dropdown">
+                      <a class="dropdown-toggle" data-toggle="dropdown">Cotización <span class="badge">{{ cotizacion }}</span></a>
+                    </li>
+                    <li class="dropdown user-dropdown">
+                        <a  class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{ user.username }} <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url "vista_logout" %}"><i class="fa fa-power-off"></i> Cerrar </a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div><!-- /.navbar-collapse -->
+        </nav>
+
+        <div id="page-wrapper">
+            {% if messages %}
+                {% for m in messages %}
+                    <div class="row">
+                        <div class="col-lg-6">
+                            {% get_bootstrap_msg m.tags as alert_tags %}
+                            <div class="alert alert-dismissable alert-{{ alert_tags }}">
+                              <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                              {{ m|safe }}
+                            </div>
+                        </div>
+                    </div><!-- /.row -->
+                {% endfor %}
+            {% endif %}
+            {% block content %}{% endblock %}
+        </div><!-- /#page-wrapper -->
+    </div><!-- /#wrapper -->
+
+
+    <!-- Page Specific Plugins -->
+{#    <script src="http://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>#}
+{#    <script src="http://cdn.oesmith.co.uk/morris-0.4.3.min.js"></script>#}
+{#    <script src="/media/js/morris/chart-data-morris.js"></script>#}
+    <script src="/media/js/rowlink.js"></script>
+
+    <!-- Script Extra -->
+    {% block extra_script %}
+
+
+    {% endblock %}
+</body>
+</html>

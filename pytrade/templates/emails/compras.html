@@ -1,0 +1,50 @@
+{% load i18n %}
+{% load url from future %}
+
+<p> Estimado/a <strong>{{ cliente.user.first_name }} {{ cliente.user.last_name }}</strong></p>
+<p>Hemos registrado una solicitud de compra desde su cuenta de PyTrade mediante nuestro servicio "Compramos por vos"</p>
+=================<br />
+Datos del Cliente<br />
+=================<br />
+<strong>Casilla:</strong> <br />
+PT{{ cliente.codigo }}<br />
+<strong>Celular:</strong><br />
+{{ cliente.celular }}<br />
+<strong>Cédula:</strong><br />
+{{ cliente.cedula }}<br />
+{% if cliente.telefono %}
+    <strong>Teléfono:</strong><br />
+    {{ cliente.telefono }}<br />
+{% endif %}
+{% if cliente.direccion %}
+    <strong>Dirección:</strong><br />
+    {{ cliente.direccion }}<br />
+{% endif %}
+<br />
+=================<br />
+Detalle de Compra<br />
+=================<br />
+<strong>Fecha:</strong> <br />
+{{ datos.fecha_solicitud }}<br />
+<strong>URL del Producto:</strong><br />
+{{ datos.enlace }}<br />
+<strong>Descripción del Producto:</strong><br />
+{{ datos.descripcion }}<br />
+<strong>Comentario:</strong><br />
+{{ datos.comentario }}<br />
+<br />
+
+<p><strong>Para completar la compra del Producto solicitado, debe pasar por nuestra Oficina para abonar la totalidad del costo de la Orden de Compra (Producto + Shipping Interno)</strong></p>
+<p><strong>El costo de este servicio es de 10% de la Orden de Compra</strong></p>
+<p><strong>Si Ud. no realizó ninguna compra, favor comunicarse con nosotros.</strong></p>
+
+<p>El horario de Atención al Cliente es de Lunes a Viernes de 08:30 a 18:30 hs. y sábados de 09:00 a 13:00 hs.</p>
+
+<p>Para mayor informaci&oacute;n puede contactarnos llamando a nuestras oficinas al (021) 609 196 o env&iacute;anos un mail a <a href="mailto:info@pytrade.com.py">info@pytrade.com.py</a></p>
+
+<p>
+    ---<br />
+    <img src="http://www.pytrade.com.py/media/images/logo-chico.png" alt="PyTrade S.R.L."><br />
+    San Benigno 995 c/ Federaci&oacute;n Rusa<br />
+    Asunci&oacute;n - Paraguay
+</p>

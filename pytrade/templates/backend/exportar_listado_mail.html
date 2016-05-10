@@ -1,0 +1,15 @@
+{% extends "basebs.html" %}
+{% load bootstrap3 %}
+
+{% block content %}
+    <form method="GET" action="">
+            <div class="row">
+                <div class="span4">
+                    <div class="input-control select">
+                        {{ form }}
+                    </div>
+                </div>
+            </div>
+            <input type="submit" value="Exportar"/>
+    </form>
+{% endblock %}

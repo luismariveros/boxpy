@@ -1,0 +1,115 @@
+{% extends "basebs.html" %}
+{% load bootstrap3 %}
+{% load humanize %}
+
+{% block content %}
+{#    <form action="" method="get">#}
+{#        {% bootstrap_form filtro.form %}#}
+{##}
+{#        <input type="submit" />#}
+{#    </form>#}
+    {% if datos %}
+        <!-- Modal -->
+        <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">Eliminar Compra</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>¿Desea eliminar la Orden de Compra Nro. <span id="modal_name"></span> de <span id="modal_user"></span>?</p>
+                        <p>No se podrá deshacer esta acción.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <form method="post" id="frmEliminarCompra" action="">
+                            {% csrf_token %}
+                            <input type="hidden" id="modal_idCompra" name="compra_id">
+                            <button class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-danger">Eliminar</button>
+                        </form>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+
+        <div class="row">
+            <div class="col-lg-6">
+                <h4>Órdenes de Compras Sin Procesar</h4>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="table-responsive">
+                    <table class="table table-hover tablesorter" id="tabla_compras">
+                        <thead>
+                            <tr>
+                                <th class="text-center">ID <i class="fa fa-sort"></i></th>
+                                <th class="text-center">Nombre <i class="fa fa-sort"></i></th>
+                                <th class="text-center">Solicitud <i class="fa fa-sort"></i></th>
+                                <th class="text-center">Cant. Compras <i class="fa fa-sort"></i></th>
+                                <th class="text-center">Valor Dolar</th>
+                                <th class="text-center">Valor Total</th>
+                                <th class="text-center">Pagado</th>
+                                <th class="text-center"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for d in datos %}
+                                <tr id="tr{{ d.id }}">
+                                    <td class="text-center">{{ d.id }}</td>
+                                    <td class="text-left">{{ d.user.get_full_name |truncatechars:30 }}</td>
+                                    <td class="text-center">{{ d.fecha_solicitud|date:"SHORT_DATE_FORMAT"}}</td>
+                                    <td class="text-right">{{ d.detalle.count }}</td>
+                                    <td class="text-right">{{ d.valor_compra_dolar|default_if_none:'No Cotizado' }}</td>
+                                    <td class="text-right">{{ d.get_total_dolar|default_if_none:'No Cotizado' }}</td>
+                                    <td class="text-center">
+                                        {% if d.pagado %}
+                                            <div class="fa fa-check"></div>
+                                        {% else %}
+                                            <div class="fa fa-times"></div>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'vista_cotizar_pedido' d.id %}" role="button" class="btn btn-primary btn-sm"><i class="fa fa-pencil"></i> Cotizar</a>
+                                        {% if d.pagado %}
+                                            <a role="button" class="btn btn-success btn-sm" disabled><i class="fa fa-dollar"></i> Pagar</a>
+                                        {% else %}
+                                            <a href="{% url 'vista_pagar_pedido' d.id %}" role="button" class="btn btn-success btn-sm"><i class="fa fa-dollar"></i> Pagar</a>
+                                        {% endif %}
+                                        <a href="#myModal" role="button" class="btn btn-danger btn-sm delete" data-toggle="modal" id="{{ d.id }}" data-name="{{ d.id }}" data-user="{{ d.user.first_name }} {{ d.user.last_name }}"><i class="fa fa-trash-o"></i> Borrar</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div><!-- /.row -->
+
+        <ul class="pagination">
+            {% if datos.has_previous %}
+                <li><a href="?page={{ datos.previous_page_number }}{{ parametros|default_if_none:"" }}">&laquo;</a></li>
+            {% endif %}
+            {% for i in datos.paginator.page_range %}
+                <li {% if datos.number == i %} class="active" {% endif %}><a href="?page={{i}}{{ parametros|default_if_none:"" }}">{{i}}</a></li>
+            {% endfor %}
+            {% if datos.has_next %}
+                <li><a href="?page={{ datos.next_page_number }}{{ parametros|default_if_none:"" }}">&raquo;</a></li>
+            {% endif %}
+        </ul>
+    {% else %}
+        <div class="row">
+            <div class="col-lg-6">
+                <h3>No hay compras pendientes</h3>
+            </div>
+        </div>
+    {% endif %}
+    {% block extra_script %}
+        <script src="/media/js/table/jquery.tablesorter.js"></script>
+        <script src="/media/js/table/tables.js"></script>
+        <script src="/media/js/jquery.form.min.js"></script>
+        <script type="text/javascript" src="/media/js/myscripts/backend-compras.js"></script>
+    {% endblock %}
+{% endblock %}

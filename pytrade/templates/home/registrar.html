@@ -1,0 +1,105 @@
+{% extends "base_lateral.html" %}
+
+{% block head_scripts %}
+    <script type="text/javascript" src="/media/js/jquery-1.9.0.min.js"></script>
+    <script type="text/javascript" src="/media/js/jquery.validate.js"></script>
+    <script type="text/javascript" src="/media/js/functions.js"></script>
+{% endblock %}
+{% block content-int %}
+<div class="contact twelve columns">
+    <div class="standard-form compressed">
+        <h4 class="semi">Registrate con tu cuenta de</h4>
+        <div class="sociaLogin">
+            <a id="facebook-login" href="{% url 'social:begin' "facebook" %}" class="btn-auth btn-facebook large">Registrate con Facebook</a><br />
+            <input type="checkbox" id="termino1">Acepto los <a href="/media/contrato-pytrade.pdf">Términos y Condiciones</a>
+        </div>
+
+        <br />
+        {% if registro_exito %}
+            <div class="form-result">
+                <p class="note success">
+                    Gracias por registrarte en PyTrade. <br />
+                    Tu Casilla de Correo ya fue creada. <br />
+                    Favor revise su email (incluída la bandeja de SPAM o No Deseado) para los datos.
+                </p>
+            </div>
+        {% endif %}
+        <h4 class="semi">- O crea una nueva cuenta -</h4>
+        <div id="fondo">
+            {% if error %}
+                <div class="form-result">
+                    <p class="note error">Cuenta de email ya registrada.</p>
+                </div>
+            {% endif %}
+
+            <form action="" method="POST" id="registro">
+                {% csrf_token %}
+                <table>
+                    {{ form.as_table }}
+                </table>
+                <p><input type="checkbox" id="termino2">Acepto los <a href="/media/contrato-pytrade.pdf" target="_blank">Términos y Condiciones</a></p>
+                <div class="submit">
+                    <button type="submit" class="btn-orange" id="btnRegistrar">Registrar</button>
+{#                    <input type="submit" value="Registrar">#}
+                </div>
+            </form>
+           <div class="clear"></div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("#btnRegistrar").click(function(){
+            if(!$("#termino2").prop('checked')){
+                alert("Debe Aceptar los Términos y Condiciones");
+                return false;
+            }
+        });
+        $("#facebook-login").click(function(){
+            if(!$("#termino1").prop('checked')){
+                alert("Debe Aceptar los Términos y Condiciones");
+                return false;
+            }
+        });
+        $("#registro").validate({
+            ignore: ".ignore",
+            debug: false,
+            errorContainer: $("#warning"),
+{#            submitHandler: function(form) {#}
+{#                //$(form).submit();#}
+{#                //alert('Los datos estan siendo procesados, presione en aceptar y aguarde');#}
+{#                $.ajax({#}
+{#                    url : '/webservices/ws_email',#}
+{#                    data: {'email' : $('#id_email').val(), "csrfmiddlewaretoken": $('input[name=csrfmiddlewaretoken]').val()},#}
+{#                    type : 'POST',#}
+{#                    async: false,#}
+{#                    dataType : 'json',#}
+{#                    success : function(datos) {#}
+{#                        if ($('#terminos').prop('checked')){#}
+{#                            if (datos.response == 'used'){#}
+{#                                $('#id_email').val('');#}
+{#                                $(form).submit();#}
+{#                                $('#id_email').siblings('label.error').text('Cuenta de Email ya registrada')#}
+{#                            }else{#}
+{#                                $('form')[0].submit();#}
+{#                            }#}
+{#                        }else{#}
+{#                            alert('Debe aceptar los terminos y condiciones');#}
+{#                            return 0;#}
+{#                        }#}
+{##}
+{#                    },#}
+{#                    error : function(jqXHR, status, error) {#}
+{#                        alert('Disculpe, existió un problema. '+jqXHR.responseText);#}
+{#                    },#}
+{#                    complete : function(jqXHR, status) {#}
+{#                        //window.location.href ='http://'+location.host+'/cartera/vendedor/index';#}
+{#                    }#}
+{#                });#}
+{#            }#}
+        });
+    });
+
+</script>
+{% endblock %}
+

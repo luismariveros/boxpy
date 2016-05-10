@@ -1,0 +1,359 @@
+{%extends 'basebs.html' %}
+{% load humanize %}
+{% load bootstrap3 %}
+
+{% block content %}
+    {% if compra %}
+        <div class="row" xmlns="http://www.w3.org/1999/html">
+            <div class="col-lg-12">
+                <h3>Pagar Órden de Compra. <small>Pago de Órden de Compra del Cliente</small></h3>
+            </div>
+        </div><!-- /.row -->
+
+        <div class="row">
+            <div class="col-lg-12">  <!-- Seccion Datos Cliente -->
+                <div class="panel panel-primary">
+                    <div class="panel-heading">Datos del Cliente</div>
+                    <div class="panel-body">
+                        <strong>Nombre:</strong> PT{{ compra.user.cliente.codigo }} - {{ compra.user.get_full_name }} | <strong>Cédula: </strong> {{ compra.user.cliente.cedula|intcomma }}
+                    </div>
+                </div>
+            </div>  <!-- FIN Seccion Datos Cliente -->
+        </div> <!-- row -->
+        <h4>Tiene <strong>{{ compra.detalle.count }}</strong> producto{{ compra.detalle.all|pluralize }} en la Órden de Compra Nro. {{ compra.id }}</h4>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">Detalle de Órden de Compra</div>
+                    <div class="table-responsive">
+                        <table class="table table-condensed table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">#</th>
+                                    <th class="text-center">ID</th>
+                                    <th class="text-center">Descripción</th>
+                                    <th class="text-center">Enlace</th>
+                                    <th class="text-center">Total USD</th>
+                                    <th class="text-center">Total Gs</th>
+                                    <th class="text-center">Fecha Solicitud</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for d in compra.detalle.all %}
+                                    <tr>
+                                        <td class="text-center">{{ forloop.counter }}</td>
+                                        <td class="text-center">{{ d.id }}</td>
+                                        <td class="text-left">{{ d.descripcion|truncatechars:40 }}</td>
+                                        <td class="text-left"><a href="{{ d.enlace }}" target="_blank">{{ d.enlace|truncatechars:40 }}</a></td>
+                                        {% if d.valor_dolar and d.valor_gs %}
+                                            <td class="text-right">{{ d.valor_dolar|floatformat:2 }} USD.</td>
+                                            <td class="text-right">{{ d.valor_gs|intcomma }} Gs.</td>
+                                        {% else %}
+                                            <td class="text-center danger" colspan="2"><a href="{% url 'vista_cotizar_pedido' compra.id %}">Falta Cotizar</a></td>
+                                        {% endif %}
+                                        <td class="text-center">{{ d.fecha_solicitud }}</td>
+                                    </tr>
+                                {% endfor %}
+                                    <tr class="warning">
+                                        <td class="text-center"></td>
+                                        <td class="text-center"></td>
+                                        <td class="text-left" colspan="2">Comisión del Servicio</td>
+                                        <td class="text-right">{{ compra.comision_dolar|floatformat:2 }} USD.</td>
+                                        <td class="text-right">{{ compra.comision_gs|intcomma }} Gs.</td>
+                                        <td></td>
+                                    </tr>
+                            </tbody>
+                        </table>
+                    </div>  <!-- table responsive -->
+
+                    <div class="panel-footer" style="padding: 0px 10px;">
+                        <div class="row">
+                            {% if compra.get_total_dolar %}
+                                <div class="col-lg-4">
+                                    <h3>Monto Gs: <strong><span id="id_montocobrado">{{ compra.get_total_gs|intcomma }}</span> Gs.</strong></h3>
+                                </div>
+                                <div class="col-lg-4">
+                                    <h3>Monto USD: <strong><span id="id_montocobrado_dolar">{{ compra.get_total_dolar|floatformat:2 }}</span> USD.</strong></h3>
+                                </div>
+                            {% else %}
+                                <div class="col-lg-4">
+                                <h4><strong>Falta Cotizar</strong></h4>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div> <!-- /.panel-footer -->
+                </div> <!-- /. panel -->
+            </div>  <!-- /.col-lg-12 -->
+        </div>  <!-- /.row -->
+
+{#                        <div class="footer">#}
+{#                            <div class="col-lg-3">#}
+{#                                <ul class="list-group">#}
+{#                                    <li class="list-group-item">#}
+{#                                        <span class="badge">{{ compra.get_total_dolar|floatformat:2 }}</span>#}
+{#                                        Orden de Compra (USD)#}
+{#                                    </li>#}
+{#                                    <li class="list-group-item">#}
+{#                                        <span class="badge">{{ compra.get_total_gs|intcomma }}</span>#}
+{#                                        Orden de Compra (Gs)#}
+{#                                    </li>#}
+{#                                </ul>#}
+{#                            </div>#}
+{#                            <div class="col-lg-3">#}
+{#                                <ul class="list-group">#}
+{#                                    {% if c.monto_entrega %}#}
+{#                                        <li class="list-group-item">#}
+{#                                            <span class="badge">{{ c.get_saldo_dolar|floatformat:2 }}</span>#}
+{#                                            Saldo (USD)#}
+{#                                        </li>#}
+{#                                        <li class="list-group-item">#}
+{#                                            <span class="badge">{{ c.get_saldo_gs|intcomma }}</span>#}
+{#                                            Saldo (Gs)#}
+{#                                        </li>#}
+{#                                    {% endif %}#}
+{#                                </ul>#}
+{#                            </div>#}
+{#                            {% if c.monto_entrega %}#}
+{#                                <div class="row">#}
+{#                                    <div class="col-lg-6">#}
+{#                                        <div class="alert alert-info">#}
+{#                                            <strong>El cliente Pagó {{ c.monto_entrega|intcomma }} {{ c.moneda_entrega.abreviado }} el {{ c.fecha_entrega|date:"SHORT_DATE_FORMAT" }}. Cobrar solo el SALDO.</strong>#}
+{#                                        </div>#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                            {% endif %}#}
+{#                            <!-- Avisos via JQuery -->#}
+{#                            <div style="display: none" id="alertSuccess{{ compra.id }}">#}
+{#                                <div class="row">#}
+{#                                    <div class="col-lg-12">#}
+{#                                        <div class="alert alert-success" data-alert="alert">#}
+{#                                            <button type="button" class="close" data-dismiss="alert">×</button>#}
+{#                                            <p><strong>Se realizó correctamente el Pago!</strong></p>#}
+{#                                        </div>#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                            <div style="display: none" id="alertError{{ compra.id }}">#}
+{#                                <div class="row">#}
+{#                                    <div class="col-lg-12">#}
+{#                                        <div class="alert alert-danger" data-alert="alert">#}
+{#                                            <button type="button" class="close" data-dismiss="alert">×</button>#}
+{#                                            <p><strong>No se guardo el PAGO. </strong>No se puede dejar SALDO. Favor pagar completamente la Orden de Compra</p>#}
+{#                                        </div>#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+
+        <form class="form" method="post" id="frmPagar{{ c.id }}" action="">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">Pagar</div>
+                        <div class="panel-body">
+                            <div class="col-lg-12" style="padding: 0px;">
+                                <div class="table-responsive">
+                                    <table class="table table-condensed" id="tabla_pagos">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center">Monto</th>
+                                                <th class="text-center">Forma de Pago</th>
+                                                <th class="text-center">Moneda</th>
+                                                <th class="text-center col-sm-2"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><input class="form-control text-right" type="text" name="montopago[]" id="monto_pago" required="True"></td>
+                                                <td>{% bootstrap_field form.formapago layout="inline" %}</td>
+                                                <td>{% bootstrap_field form.moneda layout="inline" %}</td>
+                                                <td>
+                                                    <div class="btn-group btn-group-sm">
+                                                        <button type="button" class="btn btn-default" id="btn_agregar_pago">{% bootstrap_icon "glyphicon glyphicon-plus-sign" %}</button>
+                                                        <button type="button" class="btn btn-default" id="btn_borrar_pago">{% bootstrap_icon "glyphicon glyphicon-minus-sign" %}</button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                {% buttons %}
+                                    <button type="submit" class="btn btn-primary btn-sm" id="btn_procesar">
+                                        {% bootstrap_icon "ok-circle" %} Pagar
+                                    </button>
+                                    <button type="button" class="btn btn-warning btn-sm" id="btn_divisa">{% bootstrap_icon "glyphicon glyphicon-usd" %} Comprar DIVISA</button>
+                                {% endbuttons %}
+                            </div>  <!-- col-lg-12 -->
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">Lista de Pagos realizados</div>
+                        <div class="panel-body">
+                            <div class="col-lg-12">
+                                {% if compra.pago.all %}
+                                    <div class="table-responsive">
+                                        <table class="table table-condensed table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-center">Monto</th>
+                                                    <th class="text-center">Forma de Pago</th>
+                                                    <th class="text-center">Moneda</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for p in compra.pago.all %}
+                                                    <tr>
+                                                        {% if p.moneda.codigo == 'Gs' %}
+                                                            <td class="text-right">{{ p.monto|intcomma }}</td>
+                                                        {% else %}
+                                                            <td class="text-right">{{ p.monto|floatformat:2 }}</td>
+                                                        {% endif %}
+                                                        <td class="text-center">{{ p.formapago }}</td>
+                                                        <td class="text-center">{{ p.moneda }}</td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    {% if compra.get_saldo.dolar == 0 %}
+                                        <div class="col-lg-12">
+                                            <div class="alert alert-success">
+                                                <strong>No hay saldo pendiente</strong>
+                                            </div>
+                                        </div>
+                                    {% else %}
+                                        <div class="alert alert-danger">
+                                            <h4>Saldo en Dolar: {{ compra.get_saldo.dolar|floatformat:2 }} USD.</h4>
+                                            <h4>Saldo en Gs: {{ compra.get_saldo.gs|intcomma }} Gs.</h4>
+                                        </div>
+                                    {% endif %}
+                                {% else %}
+                                    <h3>No hay pagos realizados</h3>
+                                {% endif %}
+                            </div>  <!-- col-lg-12 -->
+                        </div> <!-- /.panel-body -->
+                    </div> <!-- /.panel-primary -->
+                </div>  <!-- /.col-lg-12 -->
+            </div> <!-- /.row -->
+        </form>
+
+        <div class="row" id="bloque_divisa">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Cambio de DIVISA</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div id="compra_divisa" class="col-lg-2">
+                            {% bootstrap_field form.monto_compra_divisa_gs %}
+                        </div>
+                        <div id="compra_divisa" class="col-lg-2">
+                            {% bootstrap_field form.monto_compra_divisa_dolar %}
+                        </div>
+                        <div id="compra_divisa" class="col-lg-1">
+                            <button type="submit" class="btn btn-info btn-lg" id="btn_compra_divisa">
+                                {% bootstrap_icon "ok-circle" %} Guardar
+                            </button>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="alert alert-warning alert-dismissible" role="alert">
+                                <strong>Ingresa Dolar a la Caja y Egresa Gs de la Caja</strong>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="alert alert-success alert-dismissible" role="alert" id="alerta_divisa">
+                                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                <strong>Guardado correctamente</strong><br />
+                                Ingreso Efectivo Dolar y Egreso Efectivo Guaraní en la Caja.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>  <!-- row bloque_divisa -->
+
+
+
+    {% else %} <!-- No existe Orden de Compra -->
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="alert alert-dismissable alert-danger">
+                    <button type="button" class="close" data-dismiss="alert">×</button>
+                    No existe la Órden de Compra solicitada.
+                </div>
+            </div>
+        </div><!-- /.row -->
+    {% endif %}
+{% endblock %}
+
+{% block extra_script %}
+    <script src="/media/js/jquery.form.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('#alerta_divisa').hide();
+            $('#bloque_divisa').hide();
+        });
+
+        $("#btn_divisa").click(function(){
+            $('#bloque_divisa').toggle()
+        });
+
+        $("#btn_compra_divisa").click(function(){
+            if ($("#id_monto_compra_divisa_gs").val() == ""){
+                alert('Seleccionar el monto en Guaranies entregado al Cliente');
+                $("#id_monto_compra_divisa_gs").focus()
+                return false;
+            }
+            if ($("#id_monto_compra_divisa_dolar").val() == ""){
+                alert('Seleccionar el monto en Dolar ingresado en Caja');
+                $("#id_monto_compra_divisa_dolar").focus()
+                return false;
+            }
+            if(isNaN($("#id_monto_compra_divisa_gs").val())){
+                alert('Debe ser un numero.');
+                $("#id_monto_compra_divisa_gs").focus()
+                return false;
+            }
+            if(isNaN($("#id_monto_compra_divisa_dolar").val())){
+                alert('Debe ser un numero decimal. El separador decimal debe ser PUNTO');
+                $("#id_monto_compra_divisa_dolar").focus()
+                return false;
+            }
+            $.ajax({
+                type : 'POST',
+                url:"/backend/webservices/ws_compra_divisa",
+                data: {
+                    'monto_compra_divisa_gs' : $('#id_monto_compra_divisa_gs').val(),
+                    'monto_compra_divisa_dolar' : $('#id_monto_compra_divisa_dolar').val(),
+                    "csrfmiddlewaretoken": $('input[name=csrfmiddlewaretoken]').val()
+                },
+                success:function(res){
+                    if (res.response=='Error'){
+                        alert('Disculpe, hubo un error lado del servidor.');
+                    }else{
+                        if (res.response=='OK'){
+                            $('#alerta_divisa').toggle();
+                            $("#btn_compra_divisa").attr("disabled", "disabled");
+                        }
+                    }
+                },
+                error : function(jqXHR, status, error) {
+                    alert('Disculpe, existió un problema. '+jqXHR.responseText);
+                }
+            });
+        });
+
+        $("#btn_agregar_pago").click(function(){
+            $(this).closest("tr").clone(true).appendTo("#tabla_pagos");
+        });
+
+        $("#btn_borrar_pago").click(function(){
+            if($('#tabla_pagos tbody tr').length > 1){
+                $(this).closest("tr").remove();
+            }
+        });
+    </script>
+{% endblock %}

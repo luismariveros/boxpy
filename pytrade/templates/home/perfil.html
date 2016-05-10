@@ -1,0 +1,41 @@
+{% extends "base_lateral.html" %}
+
+{% block content-int %}
+<div class="contact eleven columns">
+    <div class="standard-form compressed">
+        <h4 class="semi">Editar Datos del Cliente</h4>
+
+        <h5 class="semi">Bienvenido {{ user.first_name }} {{ user.last_name }}</h5>
+        {% if cliente.codigo %}
+            <h5 class="semi">Código de Casilla de Correo: PT{{ cliente.codigo }}</h5>
+        {% endif %}
+        {% if msj == 1 %}
+            <div class="form-result">
+                <p class="note success">Gracias por registrarte a PyTrade.</p>
+                <p class="note warning">A continuación debe completar los siguientes datos para crear su Casilla de Correo.</p>
+            </div>
+        {% elif msj == 2 %}
+            <div class="form-result">
+                <p class="note warning">Completa tus datos</p>
+            </div>
+        {% elif msj == 3 %}
+            <div class="form-result">
+                <p class="note success">Datos actualizados correctamente</p>
+            </div>
+        {% endif %}
+
+
+        <form action="" method="post">
+            {% csrf_token %}
+            <table>
+                {{ form.as_table }}
+            </table>
+            (*) Campos obligatorios
+            <div class="submit">
+                <button type="submit" class="btn-orange" >Actualizar</button>
+            </div>
+        </form>
+        <div class="clear"></div>
+    </div>
+</div>
+{% endblock %}

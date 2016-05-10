@@ -1,0 +1,345 @@
+{% load humanize %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <title>Factura</title>
+    <style type="text/css">
+        @page {
+            size: A4;
+            margin-left: 0.7cm;
+            margin-right: 0.7cm;
+            margin-top: 0.5cm;
+        }
+        td {
+            font-weight: normal;
+        }
+    </style>
+</head>
+<body>
+    <table>
+        <tr> <!-- Copia 1 -->
+            <th>
+                <br />
+                <table style="margin-top: 50px;"> <!-- tabla Cabecera Factura -->
+                    <tr>
+                        <td style="width: 150px;"></td>
+                        <td style="width: 310px; text-align: left">Asunción, {{ factura.fecha.day }} de {{ factura.fecha|date:'F' }} de {{ factura.fecha.year }}</td>
+                        <td style="width: 90px;text-align: right; padding-right: 6px;">{% if factura.plazo == 0%}X{% endif %}</td>
+                        <td style="width: 65px;text-align: right">{% if factura.plazo > 0 %}X{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td style="text-align: left">{{ factura.cliente.nombre }}</td>
+                        <td style="text-align: right">{{ factura.cliente.ruc }}</td>
+                        <td></td>
+                    </tr>
+                </table> <!-- FIN tabla Cabecera Factura -->
+                <br />
+                <br />
+                <br />
+                <table> <!-- tabla Detalle Factura -->
+                    <tbody>
+                        {% for df in factura.facturadetalle_set.all %}
+                            <tr>
+                                <td style="width: 110px; text-align: center">1</td>
+                                <td style="width: 350px;text-align: left; ">{{ df.descripcion }}</td>
+                                <td style="width: 80px; text-align: right">
+                                    {% if factura.moneda.codigo == "Gs" %}
+                                        {{ df.exenta|intcomma }}
+                                    {% else %}
+                                        {{ df.exenta|floatformat:2 }}
+                                    {% endif %}
+                                </td>
+                                <td style="width: 85px; text-align: right"></td>
+                                <td style="width: 100px;text-align: right">
+                                    {% if factura.moneda.codigo == "Gs" %}
+                                        {{ df.iva|intcomma }}
+                                    {% else %}
+                                        {{ df.iva|floatformat:2 }}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <table>  <!-- tabla Sub Totales -->
+                    <tbody>
+                        <tr>  <!--  Sub Totales a Pagar -->
+                            <td style="width: 110px;"></td>
+                            <td style="width: 200px;text-align: left; "></td>
+                            <td style="width: 150px;text-align: left; "></td>
+                            <td style="width: 80px; text-align: right">
+                                {% if factura.moneda.codigo == "Gs" %}
+                                    {{ factura.get_total_exenta|intcomma }}
+                                {% else %}
+                                    {{ factura.get_total_exenta|floatformat:2 }}
+                                {% endif %}
+                            </td>
+                            <td style="width: 85px; text-align: right"></td>
+                            <td style="width: 100px;text-align: right">
+                                {% if factura.moneda.codigo == "Gs" %}
+                                    {{ factura.get_total_iva|intcomma }}
+                                {% else %}
+                                    {{ factura.get_total_iva|floatformat:2 }}
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>   <!-- Total a pagar en letras y numero -->
+                            <td></td>
+                            <td colspan="4" style="text-align: left; padding-top: 5px;">{{ factura.moneda.nombre|upper }} {{ total_letras|capfirst }}</td>
+                            <td style="text-align: right; padding-top: 5px; padding-bottom: 5px;">
+                                {% if factura.moneda.codigo == "Gs" %}
+                                    {{ factura.total|intcomma }}
+                                {% else %}
+                                    {{ factura.total|floatformat:2 }}
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>  <!-- Declaracion de IVA -->
+                            <td style="text-align: right; padding-top: 5px;">0</td>
+                            <td style="text-align: right; padding-top: 5px;">
+                                {% if factura.moneda.codigo == "Gs" %}
+                                    {{ factura.total_iva|intcomma }}
+                                {% else %}
+                                    {{ factura.total_iva|floatformat:2 }}
+                                {% endif %}
+                            </td>
+
+                            <td colspan="3" style="text-align: right; padding-top: 5px;">
+                                {% if factura.moneda.codigo == "Gs" %}
+                                    {{ factura.total_iva|intcomma }}
+                                {% else %}
+                                    {{ factura.total_iva|floatformat:2 }}
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </th>
+        </tr>  <!-- FIN Copia 1 -->
+        <tr>  <!-- Copia 2 -->
+            <th>
+                <br />
+                <table style="margin-top: 87px;"> <!-- tabla Cabecera Factura -->
+                    <tr>
+                        <td style="width: 150px;"></td>
+                        <td style="width: 310px; text-align: left">Asunción, {{ factura.fecha.day }} de {{ factura.fecha|date:'F' }} de {{ factura.fecha.year }}</td>
+                        <td style="width: 90px;text-align: right; padding-right: 6px;">{% if factura.plazo == 0%}X{% endif %}</td>
+                        <td style="width: 65px;text-align: right">{% if factura.plazo > 0 %}X{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td style="text-align: left">{{ factura.cliente.nombre }}</td>
+                        <td style="text-align: right">{{ factura.cliente.ruc }}</td>
+                        <td></td>
+                    </tr>
+                </table> <!-- FIN tabla Cabecera Factura -->
+                <br />
+                <br />
+                <br />
+                <table> <!-- tabla Detalle Factura -->
+                    <tbody>
+                        {% for df in factura.facturadetalle_set.all %}
+                            <tr>
+                                <td style="width: 110px; text-align: center">1</td>
+                                <td style="width: 350px;text-align: left; ">{{ df.descripcion }}</td>
+                                <td style="width: 80px; text-align: right">
+                                    {% if factura.moneda.codigo == "Gs" %}
+                                        {{ df.exenta|intcomma }}
+                                    {% else %}
+                                        {{ df.exenta|floatformat:2 }}
+                                    {% endif %}
+                                </td>
+                                <td style="width: 85px; text-align: right"></td>
+                                <td style="width: 100px;text-align: right">
+                                    {% if factura.moneda.codigo == "Gs" %}
+                                        {{ df.iva|intcomma }}
+                                    {% else %}
+                                        {{ df.iva|floatformat:2 }}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <table>  <!-- tabla Sub Totales -->
+                    <tbody>
+                        <tr>  <!--  Sub Totales a Pagar -->
+                            <td style="width: 110px;"></td>
+                            <td style="width: 200px;text-align: left; "></td>
+                            <td style="width: 150px;text-align: left; "></td>
+                            <td style="width: 80px; text-align: right">
+                                {% if factura.moneda.codigo == "Gs" %}
+                                    {{ factura.get_total_exenta|intcomma }}
+                                {% else %}
+                                    {{ factura.get_total_exenta|floatformat:2 }}
+                                {% endif %}
+                            </td>
+                            <td style="width: 85px; text-align: right"></td>
+                            <td style="width: 100px;text-align: right">
+                                {% if factura.moneda.codigo == "Gs" %}
+                                    {{ factura.get_total_iva|intcomma }}
+                                {% else %}
+                                    {{ factura.get_total_iva|floatformat:2 }}
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>   <!-- Total a pagar en letras y numero -->
+                            <td></td>
+                            <td colspan="4" style="text-align: left; padding-top: 5px;">{{ factura.moneda.nombre|upper }} {{ total_letras|capfirst }}</td>
+                            <td style="text-align: right; padding-top: 5px; padding-bottom: 5px;">
+                                {% if factura.moneda.codigo == "Gs" %}
+                                    {{ factura.total|intcomma }}
+                                {% else %}
+                                    {{ factura.total|floatformat:2 }}
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>  <!-- Declaracion de IVA -->
+                            <td style="text-align: right; padding-top: 5px;">0</td>
+                            <td style="text-align: right; padding-top: 5px;">
+                                {% if factura.moneda.codigo == "Gs" %}
+                                    {{ factura.total_iva|intcomma }}
+                                {% else %}
+                                    {{ factura.total_iva|floatformat:2 }}
+                                {% endif %}
+                            </td>
+
+                            <td colspan="3" style="text-align: right; padding-top: 5px;">
+                                {% if factura.moneda.codigo == "Gs" %}
+                                    {{ factura.total_iva|intcomma }}
+                                {% else %}
+                                    {{ factura.total_iva|floatformat:2 }}
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </th>
+        </tr>  <!-- FIN Copia 2 -->
+        <tr>  <!-- Copia 3 -->
+            <th>
+                <br />
+                <table style="margin-top: 87px;"> <!-- tabla Cabecera Factura -->
+                    <tr>
+                        <td style="width: 150px;"></td>
+                        <td style="width: 310px; text-align: left;">Asunción, {{ factura.fecha.day }} de {{ factura.fecha|date:'F' }} de {{ factura.fecha.year }}</td>
+                        <td style="width: 90px;text-align: right; padding-right: 6px;">{% if factura.plazo == 0%}X{% endif %}</td>
+                        <td style="width: 65px;text-align: right">{% if factura.plazo > 0 %}X{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td style="text-align: left">{{ factura.cliente.nombre }}</td>
+                        <td style="text-align: right">{{ factura.cliente.ruc }}</td>
+                        <td></td>
+                    </tr>
+                </table> <!-- FIN tabla Cabecera Factura -->
+                <br />
+                <br />
+                <br />
+                <table> <!-- tabla Detalle Factura -->
+                    <tbody>
+                        {% for df in factura.facturadetalle_set.all %}
+                            <tr>
+                                <td style="width: 110px; text-align: center">1</td>
+                                <td style="width: 350px;text-align: left; ">{{ df.descripcion }}</td>
+                                <td style="width: 80px; text-align: right">
+                                    {% if factura.moneda.codigo == "Gs" %}
+                                        {{ df.exenta|intcomma }}
+                                    {% else %}
+                                        {{ df.exenta|floatformat:2 }}
+                                    {% endif %}
+                                </td>
+                                <td style="width: 85px; text-align: right"></td>
+                                <td style="width: 100px;text-align: right">
+                                    {% if factura.moneda.codigo == "Gs" %}
+                                        {{ df.iva|intcomma }}
+                                    {% else %}
+                                        {{ df.iva|floatformat:2 }}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <table>  <!-- tabla Sub Totales -->
+                    <tbody>
+                        <tr>  <!--  Sub Totales a Pagar -->
+                            <td style="width: 110px;"></td>
+                            <td style="width: 200px;text-align: left; "></td>
+                            <td style="width: 150px;text-align: left; "></td>
+                            <td style="width: 80px; text-align: right">
+                                {% if factura.moneda.codigo == "Gs" %}
+                                    {{ factura.get_total_exenta|intcomma }}
+                                {% else %}
+                                    {{ factura.get_total_exenta|floatformat:2 }}
+                                {% endif %}
+                            </td>
+                            <td style="width: 85px; text-align: right"></td>
+                            <td style="width: 100px;text-align: right">
+                                {% if factura.moneda.codigo == "Gs" %}
+                                    {{ factura.get_total_iva|intcomma }}
+                                {% else %}
+                                    {{ factura.get_total_iva|floatformat:2 }}
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>   <!-- Total a pagar en letras y numero -->
+                            <td></td>
+                            <td colspan="4" style="text-align: left; padding-top: 5px;">{{ factura.moneda.nombre|upper }} {{ total_letras|capfirst }}</td>
+                            <td style="text-align: right; padding-top: 5px; padding-bottom: 5px;">
+                                {% if factura.moneda.codigo == "Gs" %}
+                                    {{ factura.total|intcomma }}
+                                {% else %}
+                                    {{ factura.total|floatformat:2 }}
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>  <!-- Declaracion de IVA -->
+                            <td style="text-align: right; padding-top: 5px;">0</td>
+                            <td style="text-align: right; padding-top: 5px;">
+                                {% if factura.moneda.codigo == "Gs" %}
+                                    {{ factura.total_iva|intcomma }}
+                                {% else %}
+                                    {{ factura.total_iva|floatformat:2 }}
+                                {% endif %}
+                            </td>
+
+                            <td colspan="3" style="text-align: right; padding-top: 5px; padding-right: 22px;">
+                                {% if factura.moneda.codigo == "Gs" %}
+                                    {{ factura.total_iva|intcomma }}
+                                {% else %}
+                                    {{ factura.total_iva|floatformat:2 }}
+                                {% endif %}
+                            </td>
+                            <td style="text-align: right;padding-bottom: -5px; font-size: x-small">{{ factura.numero }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </th>
+        </tr>
+    </table>
+</body>
+</html>

@@ -1,0 +1,149 @@
+{%extends 'basebs.html' %}
+{% load humanize %}
+{% load bootstrap3 %}
+{% block extra_head %}
+
+
+{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12">
+            <h3>Agregar Órden de Compra. <small>Crear una Órden de Compra para un Cliente</small></h3>
+        </div>
+    </div><!-- /.row -->
+    <div class="row">
+        <div class="col-lg-10">
+            <form action="" method="POST" class="form-horizontal">
+                {% csrf_token %}
+
+                <div class="row">
+                    <div class="col-lg-6">  <!-- Seccion Datos Cliente -->
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">Datos del Cliente</div>
+                            <div class="panel-body">
+                                <!-- Avisos via JQuery -->
+                                <div style="display: none" id="alertError">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="alert alert-danger" data-alert="alert">
+                                                <button type="button" class="close" data-dismiss="alert">×</button>
+                                                <p>No existe Cliente con ese Código. Editar el Código o <a href="{% url "vista_lista_clientes" %}" target="_blank">Buscar Clientes</a></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <div class="col-md-4">
+                                            {% bootstrap_field form.codigo_cliente layout='inline' %}
+                                        </div>
+                                        <div class="col-md-7" style="margin-left: 10px;">
+                                            {% bootstrap_field form.nombre layout='inline' %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>  <!-- FIN Seccion Datos Cliente -->
+                </div> <!-- row -->
+                <div class="row">
+                    <div class="col-lg-12">  <!-- Seccion Datos de la Orden de Compra -->
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">Datos de la Órden de Compra</div>
+                            <div class="panel-body">
+
+                                <div class="panel panel-info">  <!-- Orden de Compra XX -->
+                                    <div class="panel-heading">Órden de Compra <span id="cant_orden">1</span></div>
+                                    <div class="panel-body">
+                                        <div class="form-group" id="fields_wrapper">
+                                            <div class="col-md-8">
+                                                <div class="col-md-12">
+                                                    {% bootstrap_field form.enlace layout='inline' %}
+                                                </div>
+                                                <div class="col-md-12">
+                                                    {% bootstrap_field form.descripcion layout='inline' %}
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="col-md-12">
+                                                    {% bootstrap_field form.comentario layout='inline' %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12" id="botonera">
+                                    <button type="button" class="btn btn-info" id="btn_agregar_orden">
+                                        {% bootstrap_icon "plus" %} Agregar Órden de Compra
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>  <!-- FIN Seccion Datos de la Orden de Compra -->
+                </div> <!-- row -->
+
+                {% buttons %}
+                    <button type="submit" class="btn btn-primary">
+                        {% bootstrap_icon "ok-circle" %} Guardar
+                    </button>
+                    <button type="submit" class="btn" name="_addanother">
+                        {% bootstrap_icon "plus-sign" %} Guardar y agregar otro
+                    </button>
+                    <button type="submit" class="btn" name="_barcode">
+                        {% bootstrap_icon "barcode" %} Generar Barcode
+                    </button>
+                    <button type="reset" class="btn">
+                        {% bootstrap_icon "remove-circle" %} Limpiar
+                    </button>
+                {% endbuttons %}
+            </form>
+        </div>
+    </div><!-- /.row -->
+{% endblock %}
+
+{% block extra_script %}
+    <script type="text/javascript">
+        $("#id_codigo_cliente").blur(function(){
+            if ($(this).val()){
+                $.ajax({
+                    url : '/webservices/ws_codigo',
+                    data: {'codigo_cliente' : $(this).val(), "csrfmiddlewaretoken": $('input[name=csrfmiddlewaretoken]').val()},
+                    type : 'POST',
+                    dataType : 'json',
+                    success : function(datos) {
+                        if (datos.response == 'nodata'){
+                            $("#alertError").fadeIn();
+                            $('#id_codigo_cliente').focus();
+
+                        }else{
+                            $('#id_nombre').val(datos);
+                            $("#alertError").fadeOut();
+                        }
+                    },
+                    error : function(jqXHR, status, error) {
+                        alert('Disculpe, existió un problema. '+jqXHR.responseText);
+                    }
+                });
+            }
+        });
+
+        $("#btn_agregar_orden").click(function(){
+            var cant = $('.panel-info').size() + 1;
+            var campos = '<div class="panel panel-info"><div class="panel-heading">Órden de Compra <span id="cant_orden">' + cant + '</span></div><div class="panel-body"><div id="fields_wrapper" class="form-group"><div class="col-md-8"><div class="col-md-12"><div class="form-group"><label class="None sr-only">Enlace</label><input type="text" title="" required="" placeholder="Enlace" name="enlace" maxlength="350" id="id_enlace" class="form-control"></div></div><div class="col-md-12"><div class="form-group"><label class="None sr-only">Descripcion</label><input type="text" title="" required="" placeholder="Descripcion" name="descripcion" maxlength="200" id="id_descripcion" class="form-control"></div></div></div><div class="col-md-4"><div class="col-md-12"><div class="form-group"><label class="None sr-only">Comentario</label><textarea title="" rows="5" required="" placeholder="Comentario" name="comentario" id="id_comentario" cols="40" class="form-control"></textarea></div></div></div></div></div></div>';
+            $('#botonera').before(campos);
+        });
+
+
+        $("#btn_borrar_orden").click(function () {
+            var cant = $('.fields_wrapper h3').size();
+
+            if(cant==1){
+                alert('No se puede borrar');
+                return false;
+            }
+
+            $("#orden" + cant).remove();
+
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends "base_lateral.html" %}
+
+
+{% block content-int %}
+<div class="contact twelve columns">
+    <div class="standard-form compressed">
+        <h4 class="semi">Compramos por Vos</h4>
+        <p>Si no posees una Tarjeta de Crédito y/o no quieres utilizar la que tienes, utiliza nuestro servicio <strong>"Compramos por Vos".</strong></p>
+        <p>Le recordamos que contamos con cuenta de PayPal, por lo que tus compras en <a href="http://www.ebay.com/">eBay</a> son posibles.</p>
+        <p><h5>El costo de este servicio es de 10% del valor total de la Orden de Compra.</h5></p>
+        <p><strong>¿Cómo funciona?</strong></p>
+        <ol>
+            <li style="margin-bottom: 4px;">Seleccionar el producto deseado a través de alguna tienda virtual.</li>
+            <li style="margin-bottom: 4px;">Copiar el enlace o URL de la página web y pegar en el campo Enlace de esta página.</li>
+            <li style="margin-bottom: 4px;">Es obligatorio completar la <strong>descripción corta</strong> (Reloj, Billetera, Electronica, etc) y un <strong>comentario sobre el producto</strong> (color, medida, modelo, etc).</li>
+            <li style="margin-bottom: 4px;">Pasar por nuestra oficina y abonar el 100% del costo total de la Orden de Compra.</li>
+            <li style="margin-bottom: 4px;">Al retirar el producto, se abonará el costo del envío.</li>
+        </ol>
+        {% if error %}
+            <div class="form-result">
+                <p class="note error">{{ error }}</p>
+            </div>
+        {% endif %}
+
+        <form action="" id="registro" method="POST">
+            {% csrf_token %}
+            <div class="fields_wrapper">
+                <div id="orden1">
+                    <h3>Orden de Compra <span id="cant_orden">1</span></h3>
+                    {{ form.enlace }}
+                    {{ form.descripcion }}
+                    {{ form.comentario }}
+                </div>
+            </div>
+            <button type="button" class="btn" id="btn_agregar_orden">Agregar Orden</button>
+            <button type="button" class="btn btn-default" id="btn_borrar_orden">Eliminar Orden</button>
+            <div class="submit">
+                <button type="submit" class="btn-orange" >Solicitar Compra</button>
+            </div>
+        </form>
+        <div class="clear"></div>
+    </div>
+</div>
+    <script type="text/javascript">
+        $("#btn_agregar_orden").click(function(){
+            var cant = $('.fields_wrapper h3').size() + 1;
+            var campos = '<div id="orden'+ cant +'"><div class="orden"><h3>Orden de Compra <span id="cant_orden">' + cant + '</span></h3></div><input type="text" name="enlace" maxlength="350" id="id_enlace"> <input type="text" name="descripcion" maxlength="200" id="id_descripcion"> <textarea rows="10" name="comentario" id="id_comentario" cols="40"></textarea></div>';
+            $('.fields_wrapper').append(campos);
+
+        });
+
+
+        $("#btn_borrar_orden").click(function () {
+            var cant = $('.fields_wrapper h3').size();
+
+            if(cant==1){
+                alert('No se puede borrar');
+                return false;
+            }
+
+            $("#orden" + cant).remove();
+
+        });
+    </script>
+{% endblock %}

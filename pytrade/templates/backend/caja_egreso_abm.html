@@ -1,0 +1,114 @@
+{%extends 'basebs.html' %}
+{% load humanize %}
+{% load bootstrap3 %}
+{% block extra_head %}
+
+
+{% endblock %}
+{% block content %}
+    {% if not messages %}
+        <div class="row">
+            <div class="col-lg-6">
+                {% if editar %}
+                    <h3>Editar Egreso</h3>
+                {% else %}
+                    <h3>Agregar Egreso</h3>
+                {% endif %}
+            </div>
+        </div><!-- /.row -->
+        <div class="row">
+            <div class="col-lg-4">
+                <form action="" method="POST" onsubmit="return checkRadio();">
+                    {% csrf_token %}
+                    {% bootstrap_form form %}
+                    {% buttons %}
+                        <button type="submit" class="btn btn-primary">
+                            {% bootstrap_icon "ok-circle" %} Guardar
+                        </button>
+                        <button type="submit" class="btn" name="_addanother">
+                            {% bootstrap_icon "plus-sign" %} Guardar y agregar
+                        </button>
+                        <button type="reset" class="btn">
+                            {% bootstrap_icon "remove-circle" %} Limpiar
+                        </button>
+                    {% endbuttons %}
+                </form>
+            </div>
+            <div class="col-lg-6">
+                <div class="panel panel-info">
+                    <div class="panel-heading">Lista de Motivos de Egresos</div>
+                    <table class="table" id="tabla_motivo_egreso">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th class="text-left">Descripción del Motivo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for m in motivos %}
+                                <tr>
+                                    <td class="text-center"><input type="radio" value="{{ m.id }}" name="radioMotivoEgreso" /></td>
+                                    <td class="text-left">{{ m.nombre }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <div class="panel-footer">
+                        <div class="row">
+                            <div class="col-xs-8">
+                                <input class="form-control" id="id_nombre_motivo" name="nombre_motivo" placeholder="Motivo Egreso" type="text" />
+                            </div>
+                            <div class="col-xs-4">
+                                <button id="btn_agregar_motivo" class="btn btn-primary"> Agregar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!-- /.row -->
+    {% endif %}
+{% endblock %}
+
+{% block extra_script %}
+    <script type="text/javascript">
+        $("#btn_agregar_motivo").click(function(){
+            $.ajax({
+                type : 'POST',
+                url:"/backend/webservices/ws_motivo_egreso",
+                data: {'nombre_motivo' : $('#id_nombre_motivo').val(), "csrfmiddlewaretoken": $('input[name=csrfmiddlewaretoken]').val()},
+                success:function(res){
+                    if (res.response){
+                        alert('Disculpe, hubo un error lado del servidor.');
+                    }else{
+                        var html = '<tr>';
+                        jQuery.each(res,function(idx,val){
+                            html += '<td class="text-center">'
+                            html += '<input type="radio" name="radioMotivoEgreso" checked="True" value='+val.pk+' />'
+                            html += '</td>'
+                            html += '<td class="text-left">'+val.fields.nombre+'</td>'
+                            html += '</tr>'
+                            $('#tabla_motivo_egreso tbody').append(html);
+                            $('#id_motivo').attr('value',val.pk);
+                        });
+
+                    }
+
+                },
+                error : function(jqXHR, status, error) {
+                    alert('Disculpe, existió un problema. '+jqXHR.responseText);
+                }
+            });
+        });
+        function checkRadio(){
+            if ($('input[name=radioMotivoEgreso]:checked').length == 0){
+                alert('Seleccionar un Motivo de Egreso');
+                return false;
+            }
+        }
+
+        $('input[type=radio]').change(function(){
+            var id_motivo_egreso = $('input[name=radioMotivoEgreso]:checked').val()
+            $('#id_motivo').attr('value',id_motivo_egreso);
+        });
+    </script>
+{% endblock %}

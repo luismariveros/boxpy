@@ -1,0 +1,136 @@
+{%extends 'basebs.html' %}
+{% load humanize %}
+{% load bootstrap3 %}
+
+{% block content %}
+    <div class="row" xmlns="http://www.w3.org/1999/html">
+        <div class="col-lg-12">
+            <h3>Editar Orden de Compra Nro. {{ compra.id }}</h3>
+        </div>
+    </div><!-- /.row -->
+
+    <div class="row">
+        <div class="col-lg-12">  <!-- Seccion Datos Cliente -->
+            <div class="panel panel-primary">
+                <div class="panel-heading">Datos del Cliente</div>
+                <div class="panel-body">
+                    <strong>Nombre:</strong> PT{{ compra.user.cliente.codigo }} - {{ compra.user.get_full_name }} | <strong>Cédula: </strong> {{ compra.user.cliente.cedula|intcomma }}
+                </div>
+            </div>
+        </div>  <!-- FIN Seccion Datos Cliente -->
+    </div> <!-- row -->
+
+    <div class="row">
+        <form role="form" class="form-horizontal" method="post">
+            <input type="hidden" value="{{ cotizacion }}" id="id_cotizacion">
+            {{ formset.management_form }}
+            {% csrf_token %}
+            <div class="col-lg-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">Datos de la Órden de Compra Nro. {{ compra.id }} | Fecha Solicitud: {{ compra.fecha_solicitud }} </div>
+                    <div class="panel-body">  <!-- Seccion Datos de la Orden de Compra -->
+                        {% for form in formset %}
+                            <div class="panel panel-info">  <!-- Detalle Orden de Compra XX -->
+                                <div class="panel-heading">Detalle #{{ forloop.counter }} - ID: {{ form.instance.id }}</div>
+                                <div class="panel-body">
+                                    <div class="col-md-4">  <!-- Columna 1 -->
+                                        <p><strong>Enlace:</strong><br /> <a href="{{ form.instance.enlace }}" target="_blank">{{ form.instance.enlace|truncatechars:60 }}</a></p>
+                                        <p><strong>Descripción:</strong> <br /> {{ form.instance.descripcion }}</p>
+                                        <p><strong>Comentario:</strong> <br /> {{ form.instance.comentario }}</p>
+                                    </div>
+                                    <div class="col-md-4">  <!-- Columna 2 -->
+                                        <input type="hidden" value="{{ forloop.counter0 }}" id="id_form" name="id_form">
+                                        {% bootstrap_form form layout="horizontal" %}
+
+{#                                        <div class="col-md-12 text-center">#}
+{#                                            {% buttons %}#}
+{#                                                <button type="button" class="btn btn-danger btn-sm" id="{{ form.instance.id }}">#}
+{#                                                    {% bootstrap_icon "trash" %} Borrar#}
+{#                                                </button>#}
+{#                                            {% endbuttons %}#}
+{#                                        </div>#}
+                                    </div>
+                                    <div class="col-md-4">  <!-- Columna 3 -->
+                                        <h3>Valor Total USD: <br /><strong><span class="total_dolar" id="total_dolar_{{ forloop.counter0 }}"></span> USD.</strong></h3>
+                                        <h3>Valor Total Gs: <br /><strong><span class="total_gs" id="total_gs_{{ forloop.counter0 }}"></span> Gs.</strong></h3>
+                                    </div>
+                                </div>  <!-- panel-body Orden de Compra XX -->
+                            </div>
+                        {% endfor %}
+                    </div>  <!-- panel-body Seccion Datos de la Orden de Compra -->
+                    <div class="panel-footer">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="col-md-6">
+                                    <h4>Orden:</h4>
+                                    <h4>Comisión:</h4>
+                                    <h4><strong>TOTAL:</strong></h4>
+                                </div>
+                                <div class="col-md-6 text-right">
+                                    <h4><strong><span id="compra_gs">{{ compra.valor_compra_gs|default_if_none:'0'|intcomma }}</span> Gs.</strong></h4>
+                                    <h4><strong><span id="comision_gs">{{ compra.comision_gs|default_if_none:'0'|intcomma }}</span> Gs.</strong></h4>
+                                    <h4><strong><span id="total_gs">{{ compra.get_total_gs|default_if_none:'0'|intcomma }}</span> Gs.</strong></h4>
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-4">
+                                <div class="col-md-6">
+                                    <h4>Orden:</h4>
+                                    <h4>Comisión:</h4>
+                                    <h4><strong>TOTAL:</strong></h4>
+                                </div>
+                                <div class="col-md-6 text-right">
+                                    <h4><strong><span id="compra_dolar">{{ compra.valor_compra_dolar|default_if_none:'0' }}</span> USD.</strong></h4>
+                                    <h4><strong><span id="comision_dolar">{{ compra.comision_dolar|default_if_none:'0' }}</span> USD.</strong></h4>
+                                    <h4><strong><span id="total_dolar">{{ compra.get_total_dolar|default_if_none:'0' }}</span> USD.</strong></h4>
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <label><input type="checkbox" name="enviar_mail"> Enviar Mail</label>
+                                {% buttons %}
+                                    <button type="submit" class="btn btn-primary">
+                                        {% bootstrap_icon "ok-circle" %} Guardar Cotización
+                                    </button>
+                                {% endbuttons %}
+                            </div>
+                        </div>
+                    </div> <!-- /.panel-footer -->
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block extra_script %}
+    <script type="text/javascript" src="/media/js/sugar.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            // Setear el monto
+            $("input[name*='valor_dolar']").each(function(i){
+                var valor_dolar = parseFloat($("#id_form-"+i+"-valor_dolar").val());
+                var valor_gs = parseInt($("#id_form-"+i+"-valor_gs").val());
+
+                if(isNaN(valor_dolar) || isNaN(valor_gs)){
+                    $("#total_dolar_"+i).html(0);
+                    $("#total_gs_"+i).html(0);
+                }else{
+                    $("#total_dolar_"+i).html((valor_dolar).format(2, '.', ','));
+                    $("#total_gs_"+i).html((valor_gs).format(0, '.', ','));
+                }
+            });
+        });
+        // Al cambiar cualquier caja de texto, actualiza el monto
+        $(".form-control").change(function(){
+            var i = $(this).parents("div.form-group").siblings("input:hidden").val();
+            var valor_dolar = 0;
+            $("input[type=text][name*=form-"+i+"-valor_]").each(function(){
+                valor_dolar += parseFloat($(this).val());
+            });
+
+            var valor_gs = (parseInt(valor_dolar * $('#id_cotizacion').val()/500) + 1)*500;
+            $("#total_dolar_"+i).html((valor_dolar).format(2, '.', ','));
+            $("#total_gs_"+i).html((valor_gs).format(0, '.', ','));
+        });
+    </script>
+{% endblock %}

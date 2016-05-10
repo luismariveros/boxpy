@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}Página no encontrada{% endblock %}
+
+{% block content %}
+<h1>Página no encontrada</h1>
+
+<h3>Lo sentimos, pero la página web solicitada no fue encontrada.</h3>
+
+<p><a href="{% url 'vista_inicio' %}">Ir al Inicio</a></p>
+{% endblock %}

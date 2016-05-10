@@ -1,0 +1,638 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<html lang="en">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8" />
+	<title>{% block title %}PyTrade S.R.L.{% endblock %}</title>
+	<meta name="description" content="courier paraguay asuncion box encomienda pytrade">
+	<meta name="author" content="PyTrade SRL">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+	<link media="screen" charset="utf-8" rel="stylesheet" href="/media/css/base.css" />
+	<link media="screen" charset="utf-8" rel="stylesheet" href="/media/css/skeleton.css" />
+	<link media="screen" charset="utf-8" rel="stylesheet" href="/media/css/layout.css" />
+	<link media="screen" charset="utf-8" rel="stylesheet" href="/media/css/child.css" />
+	<link href='/media/images/favicon.ico' rel='icon' type='image/x-icon'/>
+	<link rel="stylesheet" href="/media/css/flexslider.css" type="text/css" media="screen" charset="utf-8" />
+	<link rel="stylesheet" href="/media/css/prettyPhoto.css" type="text/css" media="screen" charset="utf-8" />
+	<!--[if (IE 6)|(IE 7)]>
+	<link rel="stylesheet" href="/media/css/ie.css" type="text/css" media="screen" />
+	<![endif]-->
+	<!--[if lt IE 9]>
+	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+    <script type="text/javascript" language="javascript" src="/media/js/jquery-1-8-2.js"></script>
+    <script type="text/javascript" src="/media/js/default.js"></script>
+	<script type="text/javascript" src="/media/js/jquery.easing.1.3.js"></script>
+	<script type="text/javascript" src="/media/js/jquery.flexslider-min.js"></script>
+	<script type="text/javascript" src="/media/js/jquery.carousel.js"></script>
+	<script type="text/javascript" src="/media/js/jquery.color.animation.js"></script>
+	<script type="text/javascript" src="/media/js/jquery.prettyPhoto.js" charset="utf-8"></script>
+
+    <script src="media/js/crawler.js" type="text/javascript" ></script>
+    {% block head_scripts %}
+        <script type="text/javascript">
+            function openDialog() {
+                $('#overlay2').fadeIn('fast', function() {
+                    $('#popup').css('display','block');
+                    $('#popup').animate({'left':'10%'},100);
+                });
+            }
+
+            function closeDialog(id) {
+                $('#'+id).css('position','absolute');
+                $('#'+id).animate({'left':'-100%'}, 500, function() {
+                    $('#'+id).css('position','fixed');
+                    $('#'+id).css('left','100%');
+                    $('#overlay2').fadeOut('fast');
+                });
+            }
+        </script>
+    {% endblock %}
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $("#btn-login").click(function(){
+                location.href = $(this).attr("data-href")
+            });
+        });
+	</script>
+    <!--Start of Zopim Live Chat Script-->
+{#    <script type="text/javascript">#}
+{#        window.$zopim||(function(d,s){var z=$zopim=function(c){z._.push(c)},$=z.s=#}
+{#    d.createElement(s),e=d.getElementsByTagName(s)[0];z.set=function(o){z.set.#}
+{#    _.push(o)};z._=[];z.set._=[];$.async=!0;$.setAttribute("charset","utf-8");#}
+{#    $.src="//v2.zopim.com/?32HTDFXeZwhHMiVAext5V6abIzjm4P80";z.t=+new Date;$.#}
+{#    type="text/javascript";e.parentNode.insertBefore($,e)})(document,"script");#}
+{#    </script>#}
+    <!--End of Zopim Live Chat Script-->
+</head>
+<body>
+	<div class="page-wrapper">
+        <div class="slug-pattern slider-expand"><div class="overlay"><div class="slug-cut"></div></div></div>
+        <div class="header">
+            <div class="nav">
+               <div class="container">
+                    <div style="float: left; margin-left: 70%">
+                        <a href="https://twitter.com/pytrade"><img src="/media/images/twitter.png" style="width: 24px;"  alt="Twitter" title="Twitter"/></a>
+                        <a href="https://www.facebook.com/pytrade"><img src="/media/images/facebook.png" style="width:24px;" alt="Facebook" title="Facebook"/></a>
+                        <a href="https://instagram.com/pytrade/"><img src="/media/images/instagram.png" style="width: 24px;" alt="Instagram" title="Instagram"/></a>
+                    </div>
+               		<div class="sub" >
+                        <img src="/media/images/icons/phone_32.png" height="10px" /> <a href="#"> <strong> +595 21 609-196</strong> </a>
+                        | <img src="/media/images/icons/email.png" height="10px" /> <a href="{% url "vista_contacto" %}"><strong> Contáctenos</strong> </a>
+                    </div>
+                    <!-- Standard Nav (x >= 768px) -->
+                    <div class="standard">
+                        <div class="five column alpha">
+                            <div class="logo" style="margin-top: -30px">
+                                <a href="{% url 'vista_inicio' %}"><img src="/media/images/logo.png" height="80px"/></a>
+
+                            </div>
+                        </div>
+
+                        <div class="eleven column omega tabwrapper">
+                            <div class="menu-wrapper">
+                                <ul class="tabs menu" style="margin-top:15px;height: 20px">
+                                    <li><a href="{% url 'vista_empresa' %}">LA EMPRESA</a></li>
+                                    <li><a href="{% url 'vista_servicio' %}">SERVICIOS</a></li>
+                                    <li><a href="{% url 'vista_preguntas' %}">F.A.Q.</a></li>
+                                    {% if not user.is_authenticated %}
+									    <li><a href="{% url 'vista_registrar' %}" class="pulse">REGISTRATE</a></li>
+                                    {% endif %}
+
+                                    {% if user.is_authenticated %}
+                                        <li id="people" style="margin-left: 50px;height: 30px;">
+{#                                            <a href="{% url 'vista_perfil' %}">#}
+                                            {% with backends.associated|first as u %}
+                                                {% if u.provider == 'facebook' %}
+                                                    <img src="http://graph.facebook.com/{{ u.uid }}/picture">
+                                                {% elif u.provider == 'twitter' %}
+                                                    <img src="http://a0.twimg.com/sticky/default_profile_images/default_profile_6_normal.png">
+                                                {% else %}
+                                                    <img src="/media/images/unknown.jpg">
+                                                {% endif %}
+                                            {% endwith %}
+{#                                            </a>#}
+                                            <h2>{{ user.first_name |truncatechars:10 }} {{ user.last_name |truncatechars:10 }}</h2>
+                                            <span class="info">
+                                                <em><a href="{% url 'vista_profile' %}">Perfil</a></em>
+                                                <em><a href="{% url 'vista_logout' %}">Cerrar sesión</a></em>
+                                            </span>
+                                        </li>
+                                    {% else %}
+                                        <li><button id="btn-login" class="btn" data-href="{% url 'vista_login' %}">Ingresa a tu cuenta</button></li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        </div>
+
+{#                        {% if user.is_authenticated %}#}
+{#                            <ul id="people">#}
+{#                                <li>#}
+{#                                    <a href="{% url 'vista_perfil' %}">#}
+{#                                    {% with backends.associated|first as u %}#}
+{#                                        {% if u.provider == 'facebook' %}#}
+{#                                            <img src="http://graph.facebook.com/{{ u.uid }}/picture">#}
+{#                                        {% elif u.provider == 'twitter' %}#}
+{#                                            <img src="http://a0.twimg.com/sticky/default_profile_images/default_profile_6_normal.png">#}
+{#                                        {% else %}#}
+{#                                            <img src="/media/images/unknown.jpg">#}
+{#                                        {% endif %}#}
+{#                                    {% endwith %}#}
+{#                                    </a>#}
+{#                                    <h2>{{ user.first_name |truncatechars:10 }} {{ user.last_name |truncatechars:10 }}</h2>#}
+{#                                    <span class="info">#}
+{#                                        <em><a href="{% url 'vista_profile' %}">Perfil</a></em>#}
+{#                                        <em><a href="{% url 'vista_logout' %}">Cerrar sesión</a></em>#}
+{#                                    </span>#}
+{#                                </li>#}
+{#                            </ul>#}
+{#                        {% endif %}#}
+
+
+                    </div>
+                    <!-- Standard Nav Ends, Start of Mini -->
+                    <div class="mini">
+                        <div class="twelve column alpha omega mini">
+                            <div class="logo">
+                                <a href="{% url 'vista_inicio' %}"><img src="/media/images/logo-chico.png" /></a><!-- Small Logo -->
+                            </div>
+                            {% if not user.is_authenticated %}
+                                <div class="tossing left">
+                                    <a href="{% url 'vista_registrar' %}"><img src="/media/images/registrate.png" title="Registrate" height="60" width="60"/></a>
+                                </div>
+                            {% endif %}
+                            <div class="campos">
+                                {% if user.is_authenticated %}
+                                    <h6>Hola, {{ user.first_name }} {{ user.last_name }}</h6>
+                                    <a href="{% url "vista_perfil" %}">Perfil</a> | <a href="{% url "vista_logout" %}">Logout</a>
+                                {% else %}
+                                    <a href="{% url "vista_login" %}">Ingresa a tu cuenta</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="twelve column alpha omega navagation-wrapper">
+                            <select class="navagation">
+                                <option value="" selected="selected">Menú</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- End of Mini Menu -->
+                </div>
+            </div>
+            <div class="shadow"></div>
+            <div class="container">
+                <div class="page-title">
+                    <div class="rg"></div>
+                </div>
+            </div>
+        </div>
+        <div class="body">
+            <div class="body-round"></div>
+            <div class="body-wrapper">
+                <div class="side-shadows"></div>
+                {% block content %}
+                <div class="content">
+                    <div class="flexWrapper">
+                        <div class="flex-crop"></div>
+                        <div class="preload">
+                            <img src="/media/images/design/preloader.gif" />
+                        </div>
+                        <div class="flex hide">
+                            <div class="flexslider">
+                                <ul class="slides">
+                                    {% for a in archivos %}
+                                        <li><img src="/media/images/slider/{{ a }}" class="scale-with-grid" /></li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container callout">
+						<div class="twelve columns">
+                            <h4><span>PyTrade... tu mejor empresa de Courier Internacional</span></h4>
+                            <p class="subtitle">
+                                Somos una empresa de Courier y Transporte Internacional de Cargas, que dedica toda su energía a brindar la mejor atención y servicio al cliente. <br /><br />
+                            </p>
+                        </div>
+                        <div class="four columns button-wrap">
+                            <div class="wrapper">
+								<div class="share tossing">
+									<a href="{% url 'vista_registrar' %}"><img src="/media/images/registrate.png" title="Registrate"/></a>
+								</div>
+							</div>
+                        </div>
+                    </div>
+                    <div class="callout-hr"></div>
+                    <div class="container">
+                        <div class="sixteen circles columns">
+                            <ul>
+                                <li class="columns">
+                                    <a href="{% url 'vista_servicio' %}#servicio-compramos">
+                                        <div class="icon client">
+                                            <div class="content">
+                                                <div class="symbol"></div>
+                                                <h5>Compramos por vos</h5>
+                                                <span class="hr"></span>
+                                                <p>Contamos con cuenta de PayPal y eBay para vos...</p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="columns">
+                                    <a href="{% url 'vista_tarifa' %}">
+                                        <div class="icon truck">
+                                            <div class="content">
+                                                <div class="symbol"></div>
+                                                <h5>Tarifas de Servicio</h5>
+                                                <span class="hr"></span>
+                                                <p>Las tarifas más accesibles del mercado...</p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="columns">
+                                    <a href="{% url 'vista_tiendas' %}">
+                                        <div class="icon cart">
+                                            <div class="content">
+                                                <div class="symbol"></div>
+                                                <h5>Tiendas Virtuales</h5>
+                                                <span class="hr"></span>
+                                                <p>Cientos de tiendas en USA en tus manos...</p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="columns last-child">
+                                    <a href="#">
+                                        <div class="icon trophy">
+                                            <div class="content">
+                                                <div class="symbol"></div>
+                                                <h5>¿Cómo comprar?</h5>
+                                                <span class="hr"></span>
+                                                <p>Con PyTrade tenes los mejores beneficios a la hora de...</p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <div class="clear"></div>
+                            </ul>
+                        </div>
+                        <div class="sixteen columns">
+                            <div class="slidewrap">
+                            	<div class="title-wrapper">
+                                    <div class="section-title">
+                                        <h4 class="title"><strong>Servicios</strong></h4>
+                                    </div>
+                                    <span class="divider"></span>
+                                    <div class="clear"></div>
+                                </div>
+                                <ul class="slider carousel" id="sliderName">
+                                    <li class="slide">
+                                        <div class="one-third column alpha portfolio-item">
+                                        	<div class="content">
+                                                <div class="border">
+                                                    <img class="scale-with-grid" src="/media/images/delivery.png" />
+                                                </div>
+                                                <h5 class="noline" style="text-align: center"><a href="{% url 'vista_tarifa' %}">Más INFO</a></h5>
+                                            </div>
+                                            <div class="shadow"></div>
+                                        </div>
+                                        <div class="one-third column omega portfolio-item">
+                                        	<div class="content">
+                                                <div class="border">
+                                                    <img class="scale-with-grid" src="/media/images/asesoramos.png" />
+                                                </div>
+                                                <h5 class="noline" style="text-align: center"><a href="#">Más INFO</a></h5>
+                                            </div>
+                                            <div class="shadow"></div>
+                                        </div>
+                                        <div class="one-third column portfolio-item">
+                                        	<div class="content">
+                                                <div class="border">
+                                                    <img class="scale-with-grid" src="/media/images/calculadora.jpg" height="323px" width="314px"/>
+                                                </div>
+                                               <h5 class="noline" style="text-align: center"><a href="#">Cálcula los precios</a></h5>
+                                            </div>
+                                            <div class="shadow"></div>
+                                        </div>
+                                    </li>
+                                    <li class="slide"></li>
+                                </ul>
+                            </div>
+                            <span class="empty-hr"></span>
+							<div class="two-thirds column alpha">
+                            	<div class="title-wrapper">
+                                    <div class="section-title">
+                                        <h4 class="title">Tiendas Virtuales</h4>
+                                    </div>
+                                    <span class="divider"></span>
+                                    <div class="clear"></div>
+                                </div>
+                                <ul class="accordion" id="1">
+                                    <li>
+                                        <div class="parent first">
+                                            <h6><div class="accordion-caption"></div>Prendas de Vestir y Accesorios</h6>
+                                        </div>
+                                        <div class="tcontent">
+                                            <table>
+                                                <tr>
+                                                <td style="background-color: #F49020;"><strong>Damas</strong></td>
+                                                <td style="background-color: #F49020;"><strong>Caballeros</strong></td>
+                                                <td style="background-color: #F49020;"><strong>Niños</strong></td>
+                                                <td style="background-color: #F49020;"><strong>Calzado</strong></td>
+                                                </tr>
+                                                <tr valign="top">
+                                                <td style="width: 25%;"><a href="http://www.armaniexchange.com" target="_blank">A/X Armani Exchange</a> <br /> <a href="http://www.aeropostale.com" target="_blank">Aeropostale</a><br /> <a href="http://www.anntaylorloft.com" target="_blank">AnnTaylor Loft</a><br /> <a href="http://www.bebesport.com" target="_blank">Bebe Sport</a><br /> <a href="http://www.cache.com" target="_blank">Cache</a><br /> <a href="http://www.luckybrandjeans.com" target="_blank">Lucky Brand Jeans</a><br /> <a href="http://www.pacsun.com" target="_blank">PacSun</a><br /> <a href="http://www.hollisterco.com" target="_blank">Hollister</a><br /> <a href="http://www.thelimited.com" target="_blank">The Limited</a><br /> <a href="http://www.whitehouseblackmarket.com" target="_blank">White House/Black Market</a><br /> <a href="http://www.saksfifthavenue.com" target="_blank">Saks Fifth Avenue</a><br /> <a href="http://www.diesel.com" target="_blank">Diesel</a><br /> <a href="http://www.coach.com" target="_blank">Coach</a><br /> <a href="http://www.lizclaiborne.com/home/index.jsp" target="_blank">Liz Claiborne</a><br /> <a href="http://www.burberryusaonline.com/home/index.jsp">Burberry</a><br /> <a href="http://www1.talbots.com/talbotsonline/index.aspx">Talbots</a><br /> <a href="http://www.express.com/home.jsp" target="_blank">Express</a><br /> <a href="http://www.oldnavy.com" target="_blank">Old Navy</a><br /> <a href="http://www.victoriassecret.com" target="_blank">Victorias Secret</a><br /> <a href="http://www.bananarepublic.com" target="_blank">Banana Republic</a><br /> <a href="http://www.gap.com" target="_blank">Gap</a><br /> <a href="http://www.abercrombie.com/anf/index.html" target="_blank">Abercrombie &amp; Fitch</a> <a href="http://shop.nordstrom.com/C/2375500/0~2375500" target="_blank">Nordstrom</a><br /> <a href="http://www.revolveclothing.com/index.jsp" target="_blank">Revolve Clothing</a></td>
+                                                <td style="width: 25%;"><a href="http://www.armaniexchange.com" target="_blank">A/X Armani Exchange</a><br /> <a href="http://www.abercrombie.com" target="_blank">Abercrombie &amp; Fitch</a><br /> <a href="http://www.aeropostale.com" target="_blank">Aeropostale</a><br /> <a href="http://www.afterhours.com" target="_blank">After Hours</a><br /> <a href="http://www.expressfashion.com" target="_blank">Express Men</a><br /> <a href="http://www.journeys.com" target="_blank">Journeys</a><br /> <a href="http://www.luckybrandjeans.com" target="_blank">Lucky Brand Jeans</a><br /> <a href="http://www.pacsun.com" target="_blank">PacSun</a><br /> <a href="http://www.hollisterco.com" target="_blank">Hollister</a><br /> <a href="http://www.zara.com" target="_blank">Zara</a><br /> <a href="http://www.jcrew.com" target="_blank">J. Crew</a><br /> <a href="http://www.josbank.com" target="_blank">Jos Bank</a><br /> <a href="http://www.diesel.com" target="_blank">Diesel</a><br /> <a href="http://www.hottopic.com" target="_blank">Hot Topic</a><br /> <a href="http://www.bananarepublic.com" target="_blank">Banana Republic</a><br /> <a href="http://www.hugo.com" target="_blank">Hugo Boss</a><br /> <a href="http://shop.fila.com/us/eng" target="_blank">Fila</a><br /> <a href="http://www.paulfredrick.com" target="_blank">Paul Fredrick</a><br /> <a href="http://www.militaryclothing.com" target="_blank">Militaryclothing.com</a><br /> <a href="http://www.converse.com/#/home" target="_blank">Converse</a><br /> <a href="http://www.menswearhouse.com/index.jsp" target="_blank">Men's warehouse</a><br /> <a href="http://www.johnstonmurphy.com" target="_blank">Johnston Murphy</a><br /> <a href="http://www.colehaan.com" target="_blank">Cole Haan</a><br /> <a href="http://www.bluefly.com/" target="_blank">Blue Fly</a></td>
+                                                <td style="width: 25%;"><a href="http://www.thedisneystore.com" target="_blank">The Disney Store</a><br /> <a href="http://www.gymboree.com" target="_blank">Gymboree</a><br /> <a href="http://www.limitedtoo.com" target="_blank">Justice</a><br /> <a href="http://www.kidsfootlocker.com" target="_blank">Kids Foot Locker</a><br /> <a href="http://www.abercrombie.com" target="_blank">Abercrombie</a><br /> <a href="http://www.strideride.com" target="_blank">Stride Rite</a><br /> <a href="http://www.thechildrensplace.com" target="_blank">The Childrens Place</a><br /> <a href="http://www.gap.com/browse/division.do?cid=6344" target="_blank">Baby Gap</a><br /> <a href="http://www.babiesrus.com" target="_blank">Babie's R Us</a></td>
+                                                <td style="width: 25%;"><a href="http://www.champssports.com" target="_blank">Champs Sports</a><br /> <a href="http://www.coach.com" target="_blank">Coach</a><br /> <a href="http://www.finishline.com" target="_blank">Finish Line</a><br /> <a href="http://www.florsheim.com" target="_blank">Florsheim</a><br /> <a href="http://www.journeys.com" target="_blank">Journeys</a><br /> <a href="http://www.kidsfootlocker.com" target="_blank">Kids Foot Locker</a><br /> <a href="http://www.ladyfootlocker.com" target="_blank">Lady Foot Locker</a><br /> <a href="http://www.skechers.com" target="_blank">Skechers</a><br /> <a href="http://www.stevemadden.com" target="_blank">Steve Madden</a><br /> <a href="http://www.ninewest.com" target="_blank">Nine West</a></td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="parent first">
+                                            <h6><div class="accordion-caption"></div>Computadoras - Memorias - Software - Video Games - Accesorios - Repuestos</h6>
+                                        </div>
+                                        <div class="tcontent">
+                                            <table>
+                                                <tr valign="top">
+                                                <td valign="top"><a href="http://www.jandr.com" target="_blank">J &amp; R Computer<br /></a> <a href="http://www.gamestop.com" target="_blank">Gamestop</a><br /> <a href="http://www.fujitsu.com/global" target="_blank">Fujitsu</a><br /> <a href="http://www.mcafee.com/us" target="_blank">McAfee</a><br /> <a href="http://www.ebay.com" target="_blank">eBay</a><br /> <a href="http://www.sharperimage.com" target="_blank">The sharper image</a><br /> <a href="http://www.staples.com" target="_blank">Staples<br /></a> <a href="http://www.techdepot.com" target="_blank">Tech Depot</a></td>
+                                                <td valign="top"><a href="http://www.inkjets.com" target="_blank">Ink Jets</a><br /> <a href="http://www.1-inkjet.com" target="_blank">1- Inkjets</a><br /> <a href="http://www.girlsgogames.com" target="_blank">Gogames</a><br /> <a href="http://www.123inkjets.com" target="_blank">123 Inkjets.com</a><br /> <a href="http://www.akromo.com" target="_blank">Akromo</a><br /> <a href="http://www.pcconnection.com/ipa/home" target="_blank">PcConnection</a><br /> <a href="http://www.thenerds.net" target="_blank">The Nerds Net<br /></a> <a href="http://www.tigerdirect.com" target="_blank">Tiger Direct</a><br /> <a href="http://www.hpshopping.com" target="_blank">Hewlett Packard </a></td>
+                                                <td valign="top"><a href="http://www.microsoft.com" target="_blank">Microsoft<br /></a> <a href="http://www.newegg.com" target="_blank">New Egg<br /></a> <a href="http://www.officedepot.com" target="_blank">Office Depot<br /></a> <a href="http://www.officemax.com" target="_blank">Office Max<br /></a> <a href="http://www.palm.com" target="_blank">Palm Store<br /></a> <a href="http://www.pcconnection.com" target="_blank">Pc Connection<br /></a> <a href="http://www.pcuniverse.com" target="_blank">PC Universe<br /></a> <a href="http://www.sonystyle.com" target="_blank">Sony<br /></a> <a href="http://www.franklincovey.com" target="_blank">Franklin Covey<br /></a> <a href="http://www.memorysuppliers.com" target="_blank">Memorysuppliers<br /></a> <a href="http://www.memory4less.com" target="_blank">Memory4less</a><br /> <a href="http://www.sparepartswarehouse.com" target="_blank">Repuestos</a> <a href="http://www.computerpartsusa.com" target="_blank">Repuestos</a><br /> <a href="http://www.wholesalelaptopbattery.com" target="_blank">Baterias</a><br /> <a href="http://www.laptopbattery.net" target="_blank">Laptopbattery</a></td>
+                                                <td valign="top"><a href="http://www.amazon.com" target="_blank">Amazon.com<br /></a> <a href="http://www.apple.com" target="_blank">Apple.com<br /></a> <a href="http://www.bestbuy.com" target="_blank">Best Buy<br /></a> <a href="http://www.buypcsoft.com" target="_blank">BuyPCSoft.com<br /></a> <a href="http://www.buy.com" target="_blank">Buy.com<br /></a> <a href="http://www.compusa.com" target="_blank">CompUSA<br /> </a><a href="http://www.dell.com" target="_blank">Dell<br /></a><a href="http://www.ebgames.com" target="_blank">E B Games<br /></a><a href="http://www.handspring.com" target="_blank">Handspring<br /></a><a href="http://www.screentekinc.com/index.shtml" target="_blank">Pantallas<br /></a><a href="http://www.laptopscreen.com" target="_blank">Laptopscreen</a></td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="parent first">
+                                            <h6><div class="accordion-caption"></div>Cartuchos de Toner y Tintas para Impresoras</h6>
+                                        </div>
+                                        <div class="tcontent">
+                                            <table>
+                                                <tr valign="top">
+                                                <td><a href="http://www.databazaar.com" target="_blank">Databazaar<br /></a></td>
+                                                <td><a href="http://www.computerpartsusa.com" target="_blank">Toner4sale</a></td>
+                                                <td><a href="http://www.tonermax.com/welcome" target="_blank">Tonermax</a></td>
+                                                <td><a href="http://www.myinkpro.com/printer-parts.html" target="_blank">Repuesto para impresora</a></td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <p style="text-align: right;font-size: 14px;position: relative; margin-top: -30px;"><a href="{% url 'vista_tiendas' %}">Más tiendas...</a></p>
+							</div>
+                            <div class="one-third column omega">
+                            	<div class="title-wrapper">
+                                    <div class="section-title">
+                                    </div>
+                                    <span class="divider"></span>
+                                    <div class="clear"></div>
+                                </div>
+                                <ul class="style-2 slide testimonials clr overlap">
+                                    <li>
+                                        <div class="quote">
+                                        	<p>
+                                        		Empresa joven y comprometida con los clientes
+                                            </p>
+                                        </div>
+                                        <div class="source">
+                                        	<img src="/media/images/favicon.ico" />
+                                        	<strong>PY TRADE</strong>
+                                            <div class="clear"></div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="quote">
+                                        	<p>
+                                        		Tus compras no sólo llegan más rápido con nosotros , sino que también, los retirás más rápido con nuestro sistema de atención por segmentos.
+                                            </p>
+                                        </div>
+                                        <div class="source">
+                                        	<img src="/media/images/favicon.ico" />
+                                        	<strong>PY TRADE</strong>
+                                            <div class="clear"></div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                    	 <div class="quote">
+                                        	<p>
+                                        		Solo paga por el peso transportado, nada de recargos, ni extras por el valor del producto. No redondeamos pesos, ni cobramos minimos.
+                                            </p>
+                                        </div>
+                                        <div class="source">
+                                        	<img src="/media/images/favicon.ico" />
+                                        	<strong>PY TRADE</strong>
+                                            <div class="clear"></div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="clear"></div>
+                            <div class="callout intext">
+                               <div class="alpha twelve columns"></div>
+                                    <div id="marqueediv">
+                                        <div style="float:left; height:130px; width:939px; ">
+                                             <div id="mycrawler2" style="margin-top: -3px; ">
+                                                <a href="http://www.latin-america.adidas.com/" target="_blank"><img src="media/images/marque/01.jpg" style="margin-left: 10px; margin-top:6px" /></a>
+                                                <a href="http://www.nike.com/us/en_us/" target="_blank"><img src="media/images/marque/02.jpg" style="margin-left: 10px; margin-top:6px"/></a>
+                                                <a href="http://www.macys.com/" target="_blank"><img src="media/images/marque/03.jpg" style="margin-left: 10px; margin-top:6px"/></a>
+                                                <a href="http://www.forever21.com/Product/Main.aspx?br=f21" target="_blank"><img src="media/images/marque/04.jpg" style="margin-left: 10px; margin-top:6px"/></a>
+                                                <a href="http://es.hollisterco.com/shop/wd?DM_PersistentCookieCreated=true" target="_blank"><img src="media/images/marque/05.jpg" style="margin-left: 10px; margin-top:6px"/></a>
+                                                <a href="http://store.apple.com/us" target="_blank"><img src="media/images/marque/06.jpg" style="margin-left: 10px; margin-top:6px"/></a>
+                                                <a href="http://espanol.bestbuy.com/site/index.jsp" target="_blank"><img src="media/images/marque/07.jpg" style="margin-left: 10px; margin-top:6px"/></a>
+                                                <a href="http://www.aeropostale.com/shop/index.jsp?categoryId=3534619" target="_blank"><img src="media/images/marque/08.jpg" style="margin-left: 10px; margin-top:6px"/></a>
+                                                <a href="http://www.bebe.com/" target="_blank"><img src="media/images/marque/09.jpg" style="margin-left: 10px; margin-top:6px"/></a>
+                                                <a href="http://www.barnesandnoble.com/" target="_blank"><img src="media/images/marque/10.jpg" style="margin-left: 10px; margin-top:6px"/></a>
+                                                <a href="http://espanol.victoriassecret.com" target="_blank"><img src="media/images/marque/11.jpg" style="margin-left: 10px; margin-top:6px"/></a>
+                                                <a href="http://www.gap.com/" target="_blank"><img src="media/images/marque/12.jpg" style="margin-left: 10px; margin-top:6px"/></a>
+                                                <a href="http://shop.reebok.com/us/" target="_blank" ><img src="media/images/marque/13.jpg" style="margin-left: 10px; margin-top:6px"/></a>
+                                                <a href="http://us.levi.com/home/index.jsp" target="_blank"><img src="media/images/marque/14.jpg" style="margin-left: 10px; margin-top:6px"/></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <div class="clear"></div>
+                            </div>
+                            <div class="title-wrapper">
+                                <div class="section-title">
+                                    <h4 class="title"><strong>Encuentra tus paquetes</strong></h4>
+                                </div>
+                                    <span class="divider"></span>
+                            	<div class="clear"></div>
+                            </div>
+                        </div>
+                        <div class="clients columns sixteen slidewrap2">
+                            <ul class="slider carousel" id="clientSlider">
+                                <li class="slide">
+                                    <div class="client alpha">
+                                        <a href="http://www.dhl.com/en/express/tracking.html" target="_blank"><img id="transparent" src="/media/images/paquetes/dhl.jpg" /></a>
+                                    </div>
+                                    <div class="client beta">
+                                        <a href="https://www.fedex.com/fedextrack/" target="_blank"><img id="transparent" src="/media/images/paquetes/fed.jpg" /></a>
+                                    </div>
+                                    <div class="client delta">
+                                        <a href="http://www.ups.com/tracking/tracking.html" target="_blank"><img id="transparent" src="/media/images/paquetes/ups.jpg" /></a>
+                                    </div>
+                                    <div class="client omega">
+                                        <a href="https://tools.usps.com/go/TrackConfirmAction!input.action" target="_blank"><img id="transparent" src="/media/images/paquetes/us.jpg" /></a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                </div>
+{#                <div id="overlay2" class="overlay2"></div>#}
+{#                <button onclick="openDialog();">Mostrar publicidad</button>#}
+{#                <div id="popup" class="popup">#}
+{#                    <a onclick="closeDialog('popup');" class="close"></a>#}
+{#                    <div>#}
+{#                        <img src="/media/images/miami_popup.png" />#}
+{#                    </div>#}
+{#                </div>#}
+
+                {% endblock %}
+
+            </div>
+        </div>
+        <div class="footer style-2">
+            <div class="background"><div class="stitch"></div></div>
+            <div class="foot-nav-bg"></div>
+            	<div class="content">
+                    <div class="patch"></div>
+                    <div class="blur"></div>
+                    <div class="pattern">
+                    <div class="sixteen columns alpha omega">
+						<div class="">
+							<div class="background"><div class="stitch"></div></div>
+							<div class="foot-nav-bg"></div>
+							<div class="content">
+								<footer id="footer">
+									<div class="container">
+										<div class="column one-third">
+											<aside>
+												<h3 class="widgettitle">Menú Rápido</h3>
+												<ul>
+													<li>
+													    <img src="/media/images/favicon.ico" style="width:8px;height:8px;"/><a title="" href="{% url 'vista_inicio' %}"> Inicio </a>
+													</li>
+													<li>
+														<img src="/media/images/favicon.ico" style="width:8px;height:8px;"/><a title="" href="{% url 'vista_empresa' %}"> La Empresa</a>
+													</li>
+													<li>
+														<img src="/media/images/favicon.ico" style="width:8px;height:8px;"/><a title="" href="{% url 'vista_servicio' %}"> Servicios </a>
+													</li>
+													<li>
+														<img src="/media/images/favicon.ico" style="width:8px;height:8px;"/><a title="" href="{% url 'vista_preguntas' %}"> F.A.Q. </a>
+													</li>
+													<li>
+														<img src="/media/images/favicon.ico" style="width:8px;height:8px;"/><a title="" href="#"> Contacto </a>
+													</li>
+												</ul>
+											</aside>
+										</div>
+										<div class="column ct">
+											<aside>
+												<h3 class="widgettitle">Sucursales</h3>
+												<p>
+                                                    <strong style="font-size:14px;">E.E.U.U.</strong><br>
+                                                    <strong style="margin-left:5%;">Address:</strong> 1925 NW 79th Avenue<br>
+                                                    <strong style="margin-left:5%;">City:</strong> Doral<br>
+                                                    <strong style="margin-left:5%;">State:</strong> Florida<br>
+                                                    <strong style="margin-left:5%;">ZIP Code:</strong> 33126<br>
+                                                    <strong style="margin-left:5%;">Phone:</strong> (305)438 7610
+												</p>
+												<p>
+                                                    <strong style="font-size:14px;">Paraguay - Casa Central (Carmelitas)</strong><br />
+                                                    <strong style="margin-left:5%;">Dirección:</strong> San Benigno 995 c/ Federación Rusa<br />
+                                                    <strong style="margin-left:5%;">Télefono:</strong> +595 21 609-196<br />
+                                                    <strong style="margin-left:5%;">Celular (WhatApps):</strong> +595 983 900-411<br />
+                                                </p>
+{#                                                <p>#}
+{#                                                    <strong style="font-size:14px;">Paraguay - Sucursal 1 (Centro)</strong><br>#}
+{#                                                    <strong style="margin-left:5%;">Dirección:</strong> 25 de Mayo 1575 entre Perú e Irrazabal<br />#}
+{#                                                    <strong style="margin-left:5%;">Télefono:</strong> +595 21 329-1160<br />#}
+{#												</p>#}
+											</aside>
+										</div>
+										<div class="last column omega">
+											<aside>
+												<h3 class="widgettitle">Contáctenos</h3>
+												<p>
+												Consultas:
+												<br>
+												<a href="mailto:info@pytrade.com.py"> info@pytrade.com.py </a>
+												</p>
+												<p>
+												Compras y Presupuestos:
+												<br>
+												<a href="mailto:compras@pytrade.com.py"> compras@pytrade.com.py </a>
+												</p>
+											</aside>
+										</div>
+									</div>
+								</footer>
+								<div class="foot-nav-bg"></div>
+								   <div class="foot-nav">
+										<div class="copy">
+											Coptyright © Py Trade | 2013
+										</div>
+{#										<div class="nav">#}
+{#											<a href="#"><img src="/media/images/facebook.png" style="width: 25px;height: 25px;"/></a>#}
+{#											<a href="#"><img src="/media/images/twitter.png" style="width: 25px;height: 25px;"/></a>#}
+{#										</div>#}
+								   </div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+    <script type="text/javascript">
+    <!--
+        $(window).load(function(){
+            $(".flex.hide").fadeIn(1000);
+            $('.flexslider').flexslider({
+                animation: "slide"
+            });
+            $("a[class^='prettyPhoto']").prettyPhoto({social_tools: '' });
+        });
+        $(document).ready(function() {
+            $('.slidewrap, .slidewrap2').carousel({
+                slider: '.slider',
+                slide: '.slide',
+                slideHed: '.slidehed',
+                nextSlide : '.next',
+                prevSlide : '.prev',
+                addPagination: false,
+                addNav : false
+            });
+			$('.slide.testimonials').contentSlide();
+        });
+          marqueeInit({
+            uniqueid: 'mycrawler2',
+            style: {
+
+            },
+            inc: 5,
+            mouse: 'cursor driven',
+            moveatleast: 2,
+            neutral: 150,
+            savedirection: true,
+            random: true
+        });
+    // -->
+    </script>
+	<script type="text/javascript" src="http://twitter.com/javascripts/blogger.js"></script>
+    <script type="text/javascript" src="http://api.twitter.com/1/statuses/user_timeline/EmpiricalThemes.json?callback=twitterCallback2&count=2"></script>
+
+	</div>
+</body>
+</html>

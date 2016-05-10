@@ -1,0 +1,24 @@
+{% load i18n %}
+{% load url from future %}
+{% load humanize %}
+
+<p>Se cerró la caja de PyTrade.</p>
+
+<p><strong>Cerrado por:</strong> {{ caja_cierre.user.get_full_name }}</p>
+<p><strong>Fecha-Hora cierre:</strong> {{ caja_cierre.created_at }}</p>
+<p><strong>Comentario:</strong> {{ caja_cierre.comentario }}</p>
+=================<br />
+Datos de la Caja Gs<br />
+=================<br />
+<strong>Monto Apertura:</strong> {{ caja_apertura.monto_gs|intcomma }} Gs.<br />
+<strong>Sobrante:</strong> {{ caja_cierre.sobrante_gs|intcomma }} Gs.<br />
+<strong>Faltante:</strong> {{ caja_cierre.faltante_gs|intcomma }} Gs.<br />
+<strong>SALDO GENERAL CIERRE: {{ caja_cierre.monto_gs|intcomma }} Gs.</strong><br />
+<br />
+=================<br />
+Datos de la Caja USD<br />
+=================<br />
+<strong>Monto Apertura:</strong> {{ caja_apertura.monto_dolar|floatformat:2 }} USD.<br />
+<strong>Sobrante:</strong> {{ caja_cierre.sobrante_dolar|floatformat:2 }} USD.<br />
+<strong>Faltante:</strong> {{ caja_cierre.faltante_dolar|floatformat:2 }} USD.<br />
+<strong>SALDO GENERAL CIERRE: {{ caja_cierre.monto_dolar|floatformat:2 }} USD.</strong><br />

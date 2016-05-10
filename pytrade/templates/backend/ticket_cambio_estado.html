@@ -1,0 +1,95 @@
+{%extends 'basebs.html' %}
+{% load humanize %}
+{% load bootstrap3 %}
+{% block extra_head %}{% endblock %}
+{% block content %}
+    {% if not messages %}
+        <div class="row">
+            <div class="col-lg-8">
+                <h3>Editar Estado de Ticket<small> Se traen los primeros 10 registros.</small></h3>
+            </div>
+        </div><!-- /.row -->
+        <form action="" method="POST">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-lg-4">
+                    {% bootstrap_field form.estado %}
+                </div>
+                <div class="col-lg-4">
+                    {% bootstrap_field form.estado_nuevo %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-8">
+                    {% buttons %}
+                        <button type="submit" class="btn btn-primary">
+                            {% bootstrap_icon "ok-circle" %} Cambiar
+                        </button>
+                        <button type="reset" class="btn">
+                            {% bootstrap_icon "remove-circle" %} Limpiar
+                        </button>
+                    {% endbuttons %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">Lista de Tickets</div>
+                        <table class="table" id="tabla_tickets">
+                            <thead>
+                                <tr>
+                                    <th class="text-center"></th>
+                                    <th class="text-center">ID</th>
+                                    <th class="text-center">Cliente</th>
+                                    <th class="text-center">Monto Gs</th>
+                                    <th class="text-center">Monto USD</th>
+                                    <th class="text-center">Fecha</th>
+                                    <th class="text-center"></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </form>
+    {% endif %}
+{% endblock %}
+
+{% block extra_script %}
+    <script src="/media/js/jquery.formatDateTime.js"></script>
+    <script type="text/javascript" src="/media/js/sugar.min.js"></script>
+    <script type="text/javascript">
+        $('#id_estado').change(function(){
+            $.ajax({
+                type : 'POST',
+                url:"/backend/webservices/ws_ticket_estado",
+                data: {'estado' : this.value, "csrfmiddlewaretoken": $('input[name=csrfmiddlewaretoken]').val()},
+                success:function(res){
+                    if (res.response){
+                        alert('Disculpe, hubo un error lado del servidor.');
+                    }else{
+                        $('#tabla_tickets tbody').empty();
+                        jQuery.each(res,function(idx,val){
+                            var html = '<tr>';
+                            html += '<td class="text-center">'
+                            html += '<input type="checkbox" name="ticketsID[]" value='+val.pk+' />'
+                            html += '</td>'
+                            html += '<td class="text-right">'+val.pk+'</td>'
+                            html += '<td class="text-left">'+val.fields.user+'</td>'
+                            html += '<td class="text-right">'+(val.fields.monto_gs).format(0,'.', ',')+'</td>'
+                            html += '<td class="text-right">'+(parseFloat(val.fields.monto_dolar)).format(2, '.', ',')+'</td>'
+                            html += '<td class="text-right">'+$.formatDateTime('dd/M/yy hh:ii', new Date(val.fields.fecha))+'</td>'
+                            html += '<td class="text-center"><a target="_blank" href="/backend/ticket/' + val.pk + '" role="button" class="btn btn-primary btn-sm"><i class="fa fa-print"></i> Imprimir</a></td>'
+                            html += '</tr>'
+                            $('#tabla_tickets tbody').append(html);
+                        });
+                    }
+                },
+                error : function(jqXHR, status, error) {
+                    alert('Disculpe, existió un problema. '+jqXHR.responseText);
+                }
+            });
+        });
+    </script>
+{% endblock %}

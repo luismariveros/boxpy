@@ -1,0 +1,51 @@
+{% load i18n %}
+{% load url from future %}
+
+<p>Le damos la bienvenida a <strong>PyTrade</strong>, la soluci&oacute;n m&aacute;s r&aacute;pida, f&aacute;cil y segura para enviar tus compras del exterior a Paraguay.</p>
+
+<p>Se ha registrado para retirar sus paquetes de <strong>{{ cliente.sucursal }}</strong></p>
+
+============================================<br />
+DATOS DE REGISTRO<br />
+============================================<br />
+Nombre:<strong>{{ cliente.user.first_name }}</strong><br />
+Apellido:<strong>{{ cliente.user.last_name }}</strong><br />
+E-mail: <strong>{{ cliente.user.email }}</strong><br />
+C&oacute;digo de Casilla: <strong>PT{{ cliente.codigo }}</strong><br />
+<br />
+===============================================<br />
+DIRECCION DE TU CASILLA EN FLORIDA - SERVICIO AEREO<br />
+===============================================<br />
+Nombre: <strong>PT{{ cliente.codigo }} {{ cliente.user.get_full_name }} </strong><br />
+Direcci&oacute;n: <strong>1925 NW 79th Avenue</strong><br />
+Ciudad: <strong>Doral</strong><br />
+Estado: <strong>Florida</strong><br />
+C&oacute;digo Postal: <strong>33126</strong><br />
+Tel&eacute;fono: <strong>(305)438 7610</strong><br />
+Fax: <strong>(305)600 1383</strong><br />
+<br />
+<br />
+===============================================<br />
+SERVICIO MARITIMO<br />
+===============================================<br />
+Nombre: <strong>PT{{ cliente.codigo }} {{ cliente.user.get_full_name }} </strong><br />
+Direcci&oacute;n: <strong>4256 NW 35th Ct</strong><br />
+Ciudad: <strong>Miami</strong><br />
+Estado: <strong>Florida</strong><br />
+C&oacute;digo Postal: <strong>33142</strong><br />
+Tel&eacute;fono: <strong>(786)226 1255</strong><br />
+<br />
+<strong>NO OLVIDAR colocar TU C&oacute;digo de Casilla en el campo del Nombre</strong><br />
+
+<p>El horario de Atención al Cliente es de Lunes a Viernes de 08:30 a 18:30 hs. y sábados de 09:00 a 13:00 hs.</p>
+
+<h4>Visite la sección <a href="http://www.pytrade.com.py/{% url 'vista_tiendas' %}">Tiendas Virtuales</a> para conocer las distintas opciones.</h4>
+
+<p>Para mayor informaci&oacute;n puede contactarnos llamando a nuestras oficinas al (021) 609 196 o env&iacute;anos un mail a <a href="mailto:info@pytrade.com.py">info@pytrade.com.py</a></p>
+
+<p>
+    ---<br />
+    <img src="http://www.pytrade.com.py/media/images/logo-chico.png" alt="PyTrade S.R.L."><br />
+    Casa Central - San Benigno 995 c/ Federaci&oacute;n Rusa<br />
+    Asunci&oacute;n - Paraguay
+</p>

@@ -1,0 +1,62 @@
+{%extends 'basebs.html' %}
+{% load humanize %}
+{% load bootstrap3 %}
+{% block extra_head %}
+
+
+{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-lg-5">
+            {% if editar %}
+                <h3>Editar Proveedor</h3>
+            {% else %}
+                <h3>Agregar Proveedor</h3>
+            {% endif %}
+        </div>
+    </div><!-- /.row -->
+    <div class="row">
+        <div class="col-lg-5">
+            <form action="" method="POST">
+                {% csrf_token %}
+                {% bootstrap_form form %}
+                {% buttons %}
+                    <button type="submit" class="btn btn-primary">
+                        {% bootstrap_icon "ok-circle" %} Guardar
+                    </button>
+                    <button type="submit" class="btn" name="_addanother">
+                        {% bootstrap_icon "plus-sign" %} Guardar y agregar
+                    </button>
+                    <button type="reset" class="btn">
+                        {% bootstrap_icon "remove-circle" %} Limpiar
+                    </button>
+                {% endbuttons %}
+            </form>
+        </div>
+        <div class="col-lg-4">
+            <div class="panel panel-info">
+                <div class="panel-heading">Lista de Proveedores</div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="text-center">#</th>
+                            <th class="text-left">Nombre Proveedor</th>
+                            <th class="text-center"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for p in proveedores %}
+                            <tr>
+                                <td class="text-center">{{ forloop.counter }}</td>
+                                <td class="text-left">{{ p.nombre }}</td>
+                                <td><a href="{% url 'vista_editar_proveedor' p.id %}" role="button" class="btn btn-primary btn-sm"><i class="fa fa-pencil"></i> Editar</a></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div><!-- /.row -->
+{% endblock %}
+
+{% block extra_script %}{% endblock %}

@@ -1,0 +1,97 @@
+{% extends "base_lateral.html" %}
+
+{% block content-int %}
+<div class="twelve columns">
+    <div class="sidebar-right">
+        <h4 class="semi">Perfil PyTrade</h4>
+        {% if msj == 1 %}
+            <div class="form-result">
+                <p class="note success">Gracias por registrarte a PyTrade.</p>
+                <p class="note warning">A continuación debe completar los siguientes datos para crear su Casilla de Correo.</p>
+            </div>
+        {% elif msj == 2 %}
+            <div class="form-result">
+                <p class="note warning">Completa tus datos</p>
+            </div>
+        {% elif msj == 3 %}
+            <div class="form-result">
+                <p class="note success">Datos actualizados correctamente</p>
+            </div>
+        {% endif %}
+
+        {% if messages %}
+            {% for m in messages %}
+                <div class="form-result">
+                    <p class="note {{ m.tags }}">{{ m }}</p>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+
+        <h5 class="semi">
+            Bienvenido {{ user.first_name }} {{ user.last_name }} -
+            <a href="{% url 'vista_perfil'%}">Editar Perfil</a>
+        </h5>
+        <h5 class="semi">
+            Compramos por vos <a href="{% url 'vista_comprar'%}">Comprar</a>
+        </h5>
+        {% if compras %}
+            <h5 class="semi">Compras Pendientes</h5>
+            <div class="tabla">
+                <table>
+                    <tr>
+                        <td>ID</td>
+                        <td>Fecha Solicitud</td>
+                        <td>Estado</td>
+                        <td>Enlace</td>
+                    </tr>
+                    {% for c in compras %}
+                        {% for d in c.detalle.all %}
+                            <tr>
+                                <td>{{ c.id }}</td>
+                                <td>{{ c.fecha_solicitud }}</td>
+                                <td>{{ d.get_estado_display }}</td>
+                                <td>{{ d.enlace|truncatechars:35 }}</td>
+                            </tr>
+                        {% endfor %}
+
+                    {% endfor %}
+                </table>
+            </div>
+            <br /><br />
+        {% else %}
+            <h5 class="semi">No hay compras pendientes</h5>
+        {% endif %}
+        {% if paquetes %}
+            <h5 class="semi">Paquetes Pendientes</h5>
+            <div class="tabla">
+                <table>
+                    <tr>
+                        <td>ID</td>
+                        <td>Fecha</td>
+                        <td>Descripción</td>
+                        <td>Tracking</td>
+                        <td>Peso</td>
+                        <td>Estado</td>
+                    </tr>
+                    {% for p in paquetes %}
+                        <tr>
+                            <td>{{ p.id }}</td>
+                            <td>{{ p.fecha }}</td>
+                            <td>{{ p.descripcion }}</td>
+                            <td>{{ p.tracking }}</td>
+                            <td>{{ p.peso }} Kg.</td>
+                            <td>{{ p.ubicacion }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <br /><br />
+        {% else %}
+            <h5 class="semi">No hay paquetes pendientes</h5>
+        {% endif %}
+
+        <h5 class="semi" style="margin-top: 5px;">Historial de Paquetes y Compras. <a href="{% url 'vista_historial' %}">Ver</a> </h5>
+    </div>
+</div>
+{% endblock %}

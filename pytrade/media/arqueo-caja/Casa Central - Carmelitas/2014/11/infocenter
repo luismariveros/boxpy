@@ -1,0 +1,8 @@
+OK -restablecer contraseña de SW Datacenter
+OK -habilitar CDP a SW Riesgo
+OK -Activar el SW de Procesos (PoE)
+-Segmentar la RED (Tener en cuenta Cooperativa)
+-DHCP estatico por MAC en los Router de Campo
+-Servidor FreeRadius.
+-Firewall
+-Probar DHCP Oficina Central para VLAN

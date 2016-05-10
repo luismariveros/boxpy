@@ -1,0 +1,35 @@
+{% load humanize %}
+{% load i18n %}
+{% load url from future %}
+Estimado/a <strong>{{ cliente.first_name }} {{ cliente.last_name }}</strong>,
+
+<p>Ya se encuentra en nuestra <strong>Oficina de Asunción</strong> {{ datos.count }} paquete{{ datos.count|pluralize }}. A continuación el detalle:</p>
+<ol>
+    {% for paquete in datos %}
+        <li><strong>{{ paquete.fecha_destino }} | {{ paquete.descripcion }} | {{ paquete.peso }} Kg. | {{ paquete.tracking }}</strong></li>
+    {% endfor %}
+</ol>
+{% if datos_extra %}
+    <h3>Otros paquetes en Asunción</h3>
+    <ol>
+        {% for paquete in datos_extra %}
+            <li><strong>{{ paquete.fecha_destino }} | {{ paquete.descripcion }} | {{ paquete.peso }} Kg.</strong></li>
+        {% endfor %}
+    </ol>
+{% endif %}
+<h3>OBSERVACIÓN: El peso especificado puede variar</h3>
+
+<p>El horario de Atención al Cliente es de Lunes a Viernes de 08:30 a 18:30 hs. y sábados de 09:00 a 13:00 hs.</p>
+
+<p>Para mayor informaci&oacute;n puede contactarnos llamando a nuestras oficinas al (021) 609 196 o env&iacute;anos un mail a <a href="mailto:info@pytrade.com.py">info@pytrade.com.py</a></p>
+<p>San Benigno 995 c/ Federaci&oacute;n Rusa<br />
+Asunci&oacute;n - Paraguay</p>
+
+<p>Ignore este email si Usted ya retiró su paquete.</p>
+
+<p>
+    ---<br />
+    <img src="http://www.pytrade.com.py/media/images/logo-chico.png" alt="PyTrade S.R.L."><br />
+    San Benigno 995 c/ Federaci&oacute;n Rusa<br />
+    Asunci&oacute;n - Paraguay
+</p>

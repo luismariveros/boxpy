@@ -1,0 +1,48 @@
+{% extends "basebs.html" %}
+{% load bootstrap3 %}
+{% load humanize %}
+
+{% block content %}
+    {% for p in ps %}
+        <li>PT{{ p.user.cliente.codigo }} - {{ p.user.get_full_name }} - {{ p.cant }}</li>
+    {% endfor %}
+    {% if paquetes %}
+        <div class="row">
+            <div class="col-lg-6">
+                <h4>Paquetes para Agrupar en una bolsa</h4>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="table-responsive">
+                    <table class="table table-condensed table-hover table-striped">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th class="text-center">Nombre Cliente</th>
+                                <th class="text-center">Cant.</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for p in paquetes %}
+                                <tr>
+                                    <td class="text-center">{{ forloop.counter }}</td>
+                                    <td class="text-left">PT{{ p.user.cliente.codigo }} - {{ p.user.get_full_name }}</td>
+                                    <td class="text-right">{{ p.cant }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div><!-- /.row -->
+
+    {% else %}
+        <div class="row">
+            <div class="col-lg-6">
+                <h3>No hay paquetes para agrupar</h3>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

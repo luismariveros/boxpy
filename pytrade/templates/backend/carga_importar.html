@@ -1,0 +1,110 @@
+{% extends "basebs.html" %}
+{% load bootstrap3 %}
+{% load humanize %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="panel panel-primary">
+                <div class="panel-heading">Cargar Datos</div>
+                <div class="panel-body">
+                   <form action="" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {% bootstrap_form form %}
+                        {% buttons %}
+                            <button type="submit" class="btn btn-primary">
+                                {% bootstrap_icon "ok-circle" %} Upload
+                            </button>
+                        {% endbuttons %}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% if cargas %}
+        <div class="row">
+            <div class="col-lg-6">
+                <h4>Últimas 10 Cargas Procesadas</h4>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="table-responsive">
+                    <table class="table table-hover tablesorter" id="tabla_compras">
+                        <thead>
+                            <tr>
+                                <th class="text-center"># <i class="fa fa-sort"></i></th>
+                                <th class="text-center">ID <i class="fa fa-sort"></i></th>
+                                <th class="text-center">Archivo <i class="fa fa-sort"></i></th>
+                                <th class="text-center">Origen <i class="fa fa-sort"></i></th>
+                                <th class="text-center">Cantidad Paquetes <i class="fa fa-sort"></i></th>
+                                <th class="text-center">Kilos</th>
+                                <th class="text-center">Creado</th>
+                                <th class="text-center"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for c in cargas %}
+                                <tr id="tr{{ c.id }}">
+                                    <td class="text-center">{{ forloop.counter }}</td>
+                                    <td class="text-center">{{ c.id }}</td>
+                                    <td class="text-left">{{ c.archivo }}</td>
+                                    <td class="text-left">{{ c.origen }}</td>
+                                    <td class="text-center">{{ c.cantidad_paquetes }}</td>
+                                    <td class="text-right">{{ c.kilos }}</td>
+                                    <td class="text-center">{{ c.created_at|date }}</td>
+                                    <td>
+                                        <a href="{% url 'vista_detalle_carga' c.id %}" role="button" class="btn btn-primary btn-sm"><i class="fa fa-pencil"></i> Detalle</a>
+{#                                        <a href="{% url 'vista_pagar_pedido' d.user_id %}" role="button" class="btn btn-success btn-sm"><i class="fa fa-dollar"></i> Pagar</a>#}
+{#                                        <a href="#myModal" role="button" class="btn btn-danger btn-sm delete" data-toggle="modal" id="{{ d.id }}" data-name="{{ d.id }}" data-user="{{ d.user.first_name }} {{ d.user.last_name }}"><i class="fa fa-trash-o"></i> Borrar</a>#}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div><!-- /.row -->
+    {% else %}
+        <div class="row">
+            <div class="col-lg-6">
+                <h3>No hay cargas</h3>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block extra_script %}
+    <script type="text/javascript">
+        $().ready(function(){
+            $('#id_kilo_carga').siblings().hide();
+            $('#id_kilo_carga').hide();
+            $('#id_carga_asociada').siblings().hide();
+            $('#id_carga_asociada').hide();
+            var origen = $('#id_origen').find(":selected").text();
+            if (origen == 'Asuncion'){
+                $('#id_kilo_carga').siblings().show();
+                $('#id_kilo_carga').show();
+                $('#id_carga_asociada').siblings().show();
+                $('#id_carga_asociada').show();
+            }
+        });
+
+        $("#id_origen").change(function(){
+            var origen = $('#id_origen').find(":selected").text();
+            if (origen == 'Asuncion'){
+                $('#id_kilo_carga').siblings().show();
+                $('#id_kilo_carga').show();
+                $('#id_carga_asociada').siblings().show();
+                $('#id_carga_asociada').show();
+            }else{
+                $('#id_kilo_carga').siblings().hide();
+                $('#id_kilo_carga').hide();
+                $('#id_carga_asociada').siblings().hide();
+                $('#id_carga_asociada').hide();
+            }
+        });
+    </script>
+
+{% endblock %}

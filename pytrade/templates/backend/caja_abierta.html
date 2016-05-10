@@ -1,0 +1,44 @@
+{% extends "basebs.html" %}
+{% load bootstrap3 %}
+{% load humanize %}
+
+{% block content %}
+    {% if caja_abierta %}
+        <div class="row">
+            <div class="col-lg-6">
+                <h4>Datos de la Caja Abierta</h4>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-lg-4">
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <span class="badge">{{ caja_abierta.0.created_at|date:"SHORT_DATE_FORMAT" }}</span>
+                        Fecha Apertura
+                    </li>
+                    <li class="list-group-item">
+                        <span class="badge">{{ caja_abierta.0.monto_gs|intcomma }}</span>
+                        Monto Gs
+                    </li>
+                    <li class="list-group-item">
+                        <span class="badge">{{ caja_abierta.0.monto_dolar|floatformat:2 }}</span>
+                        Monto USD
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4">
+                <a class="btn btn-primary btn-lg btn-block" href="{% url 'vista_cierre_caja' caja_abierta.0.id %}">Cerrar Caja</a>
+            </div>
+        </div>
+
+    {% else %}
+        <div class="row">
+            <div class="col-lg-6">
+                <h3>No hay ninguna Caja Abierta</h3>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

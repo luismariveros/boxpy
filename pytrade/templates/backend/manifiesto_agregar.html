@@ -1,0 +1,129 @@
+{% extends "basebs.html" %}
+{% load bootstrap3 %}
+{% load humanize %}
+
+{% block content %}
+        <form action="" method="POST" class="form-inline" role="form">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-lg-6">
+                    <h4>Agregar Manifiesto</h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">Datos del Manifiesto</div>
+                        <div class="panel-body">
+                            {% bootstrap_form form %}
+                            {% buttons %}
+                                <button type="submit" class="btn btn-primary btn-sm">
+                                    {% bootstrap_icon "ok-circle" %} Guardar
+                                </button>
+                            {% endbuttons %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">Lista de Paquetes</div>
+                        <table class="table table-hover" id="tabla_paquetes">
+                            <thead>
+                                <tr>
+                                    <th class="text-center"><input type="checkbox" id="checkAll" checked/></th>
+                                    <th class="text-center">ID</th>
+                                    <th class="text-center">Código </th>
+                                    <th class="text-center">Cliente </th>
+                                    <th class="text-center">Descripción </th>
+                                    <th class="text-center">Fecha Origen </th>
+                                    <th class="text-center">Peso </th>
+                                    <th class="text-center">Valor USD </th>
+                                    <th class="text-center">Tracking</th>
+                                    <th class="text-center">Proveedor</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div><!-- /.row -->
+        </form>
+{% endblock %}
+
+{% block extra_script %}
+    <script src="/media/js/jquery.formatDateTime.js"></script>
+    <script type="text/javascript" src="/media/js/sugar.min.js"></script>
+    <script type="text/javascript">
+        $('#id_origen').change(function(){
+            $.ajax({
+                type : 'POST',
+                url:"/backend/webservices/ws_manifiesto_paquetes",
+                data: {
+                    'origen' : this.value,
+                    "csrfmiddlewaretoken": $('input[name=csrfmiddlewaretoken]').val()
+                },
+                success:function(res){
+                    if (res.response){
+                        alert('Disculpe, hubo un error lado del servidor.');
+                    }else{
+                        $('#tabla_paquetes tbody').empty();
+                        var peso=0;
+                        jQuery.each(res,function(idx,val){
+                            var html = '<tr>';
+                            html += '<td class="text-center"><input type="checkbox" name="paquetes[]" value='+val.pk+' checked/></td>'
+                            html += '<td class="text-center"><a target="_blank" href=/backend/paquete/editar/'+val.pk+'>'+val.pk+'</a></td>'
+                            html += '<td class="text-right">'+val.fields.codigo+'</td>'
+                            html += '<td class="text-left">'+val.fields.user+'</td>'
+                            html += '<td class="text-left">'+val.fields.descripcion+'</td>'
+                            html += '<td class="text-center">'+$.formatDateTime('dd/M/yy', new Date(val.fields.fecha))+'</td>'
+                            html += '<td class="text-right">'+(parseFloat(val.fields.peso)).format(2, '.', ',')+'<input type="hidden" value='+parseFloat(val.fields.peso)+' id="peso_input" name="peso_input"/></td>'
+                            if(val.fields.valor_dolar){
+                                html += '<td class="text-right">'+(parseFloat(val.fields.valor_dolar)).format(2, '.', ',')+'</td>'
+                            }else{
+                                html += '<td class="text-right">'+(parseFloat(0)).format(2, '.', ',')+'</td>'
+                            }
+                            html += '<td class="text-center">'+val.fields.tracking+'</td>'
+                            html += '<td class="text-center">'+val.fields.proveedor+'</td>'
+                            html += '</tr>'
+                            $('#tabla_paquetes tbody').append(html);
+                            peso += parseFloat(val.fields.peso);
+
+                        });
+                        $('#id_bolsa_peso').val(peso.toFixed(2));
+                    }
+                },
+                error : function(jqXHR, status, error) {
+                    alert('Disculpe, existió un problema. '+jqXHR.responseText);
+                }
+            });
+        });
+
+        {# Actualizar bolsa_peso al cambiar el checkbox #}
+        $(document).on("change", "input[type='checkbox']", function () {
+            var peso = 0;
+            $.each($("input[name='paquetes[]']:checked"), function() {
+                var data = $(this).parents('tr:eq(0)');
+                peso += parseFloat($(data).find('#peso_input').val().replace(',','.').replace(' ',''));
+            });
+            $('#id_bolsa_peso').val(peso.toFixed(2));
+        });
+
+        {# Checkbox: checkAll #}
+        $(document).ready(function() {
+            $('#checkAll').click(function(event) {  //on click
+                if(this.checked) { // check select status
+                    $("input[name='paquetes[]']").each(function() { //loop through each checkbox
+                        this.checked = true;  //select all checkboxes with class "checkbox1"
+                    });
+                }else{
+                    $("input[name='paquetes[]']:checked").each(function() { //loop through each checkbox
+                        this.checked = false; //deselect all checkboxes with class "checkbox1"
+                    });
+                }
+            });
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,136 @@
+{% extends "basebs.html" %}
+{% load bootstrap3 %}
+{% load humanize %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-6">
+            <h4>Historial del Cliente</h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-primary">
+                <div class="panel-heading">Datos del Cliente</div>
+                <div class="panel-body">
+                    <strong>Nombre:</strong> {{ cliente.user.first_name }} {{ cliente.user.last_name }} - PT{{ cliente.codigo }}
+                    <strong>Cédula:</strong> {{ cliente.cedula|intcomma }}
+                    <strong>Categoría:</strong> {{ cliente.categoria.costo }}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% if paquetes %}
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">Datos de Paquetes del Cliente</div>
+                    <div class="table-responsive">
+                        <table class="table table-condensed table-hover tablesorter" id="tabla_compras">
+                            <thead>
+                                <tr>
+                                    <th class="text-center"># <i class="fa fa-sort"></i></th>
+                                    <th class="text-left">Descripción <i class="fa fa-sort"></i></th>
+                                    <th class="text-center">Código <i class="fa fa-sort"></i></th>
+                                    <th class="text-center">Ubicacion <i class="fa fa-sort"></i></th>
+                                    <th class="text-center">Fecha Origen<i class="fa fa-sort"></i></th>
+                                    <th class="text-center">Fecha Destino <i class="fa fa-sort"></i></th>
+                                    <th class="text-center">Peso</th>
+                                    <th class="text-center">Tracking</th>
+                                    <th class="text-center">Proveedor</th>
+                                    <th class="text-center">Sucursal <i class="fa fa-sort"></i></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for p in paquetes %}
+                                    {% if p.entregado  %}
+                                        <tr id="tr{{ p.id }}">
+                                    {% else %}
+                                        <tr id="tr{{ p.id }}" class="danger">
+                                    {% endif %}
+                                        <td class="text-center"><a href="{% url "vista_paquete_editar" p.id %}">{{ forloop.counter }}</a></td>
+                                        <td class="text-left">{{ p.descripcion }}</td>
+                                        <td class="text-right">{{ p.codigo }}</td>
+                                        <td class="text-left">{{ p.ubicacion }}</td>
+                                        <td class="text-center">{{  p.fecha |date:"SHORT_DATE_FORMAT" }}</td>
+                                        <td class="text-right">{{ p.fecha_destino |date:"SHORT_DATE_FORMAT" }}</td>
+                                        <td class="text-right">{{ p.peso | floatformat:2 }} Kg.</td>
+                                        <td class="text-right">{{ p.tracking }}</td>
+                                        <td class="text-right">{{ p.proveedor }}</td>
+                                        <td class="text-center">{{ p.sucursal }}</td>
+                                    </tr>
+                                {% endfor %}
+                                <tr class="warning">
+                                    <td colspan="6" class="text-right"><strong>Totales ({{ info_paquetes.cantidad |intcomma }} Paquetes): </strong></td>
+                                    <td class="text-right"><strong>{{ info_paquetes.peso |floatformat:2 }} Kg.</strong></td>
+                                    <td colspan="3"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>  <!-- table -->
+                </div>  <!-- panel -->
+            </div>
+        </div><!-- /.row -->
+    {% else %}
+        <div class="row">
+            <div class="col-lg-6">
+                <h3>No hay paquetes del Cliente</h3>
+            </div>
+        </div>
+    {% endif %}
+    {% if tickets %}
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">Datos de Tickets del Cliente</div>
+                    <div class="table-responsive">
+                        <table class="table table-condensed table-hover tablesorter" id="tabla_compras">
+                            <thead>
+                                <tr>
+                                    <th class="text-center"># <i class="fa fa-sort"></i></th>
+                                    <th class="text-center">ID <i class="fa fa-sort"></i></th>
+                                    <th class="text-center">Fecha <i class="fa fa-sort"></i></th>
+                                    <th class="text-center">Cant. <i class="fa fa-sort"></i></th>
+                                    <th class="text-center">Kilos</th>
+                                    <th class="text-center">Monto Gs.</th>
+                                    <th class="text-center">Monto USD.</th>
+                                    <th class="text-center"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for t in tickets %}
+                                    <tr id="tr{{ t.id }}">
+                                        <td class="text-center">{{ forloop.counter }}</td>
+                                        <td class="text-right">{{ t.id }}</td>
+                                        <td class="text-left">{{ t.fecha|date:"d M Y - H:i" }}</td>
+                                        <td class="text-right">{{ t.cantidad_paquete }} Paq.</td>
+                                        <td class="text-right">{{ t.peso_cobrado }} Kg.</td>
+                                        <td class="text-right">{{ t.monto_gs |intcomma }} Gs.</td>
+                                        <td class="text-right">{{ t.monto_dolar |floatformat:2 }} USD.</td>
+                                        <td>
+                                            <a target="_blank" href="{% url 'vista_detalle_ticket' t.id %}" role="button" class="btn btn-primary btn-sm"><i class="fa fa-print"></i> Imprimir</a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                <tr class="warning">
+                                    <td colspan="2" class="text-right"><strong>Totales ({{ info_tickets.cantidad |intcomma }} Tickets): </strong></td>
+                                    <td class="text-right"><strong>{{ info_tickets.cantidad_paquete |intcomma }} Paq.</strong></td>
+                                    <td class="text-right"><strong>{{ info_tickets.total_kilo |floatformat:2 }} Kg.</strong></td>
+                                    <td class="text-right"><strong>{{ info_tickets.total_gs |intcomma }} Gs.</strong></td>
+                                    <td class="text-right"><strong>{{ info_tickets.total_dolar |floatformat:2 }} USD.</strong></td>
+                                    <td colspan="3"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>  <!-- table -->
+                </div>  <!-- panel -->
+            </div>
+        </div><!-- /.row -->
+    {% else %}
+        <div class="row">
+            <div class="col-lg-6">
+                <h3>No hay Tickets del Cliente</h3>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

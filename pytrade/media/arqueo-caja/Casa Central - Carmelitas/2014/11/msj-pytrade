@@ -1,0 +1,4 @@
+abrí una empresa de courier internacional! dale pues me gusta https://www.facebook.com/pytrade y podes registrarte y crear una casilla de correo en USA gratis en http://pytrade.com.py... Cualquier cosa a las órdenes!
+
+-- obtener el peso de los vendedores
+select v.id, u.first_name || ' ' || u.last_name as vendedor, sum(p.peso) as peso from pytrade_paquetes p inner join pytrade_clientes c on p.user_id=c.user_id inner join pytrade_vendedores v on c.vendedor_id=v.id inner join auth_user u on v.user_id=u.id group by v.id, u.first_name, u.last_name;

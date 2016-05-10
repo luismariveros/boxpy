@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="content">
+    <div class="container">
+        <div class="five columns">
+            <div class="sidebar">
+                <p style="margin-left: 10px;">
+                    <section id="secondary">
+                        <aside class="widget">
+                            <h3 class="widgettitle">Opciones</h3>
+                            <ul style="width:230px;">
+                                <li style="margin-left:5%;">
+                                <a href="#">Configuración de Cuenta</a>
+                                </li>
+                                <li style="margin-left:5%;">
+                                <a href="#">Paquetes Entregados</a>
+                                </li>
+                                <li style="margin-left:5%;">
+                                <a href="#">Paquetes Pendientes</a>
+                                </li>
+                                <li style="margin-left:5%;">
+                                <a href="#">Método de Notificación</a>
+                                </li>
+                                <li style="margin-left:5%;">
+                                <a href="#">Mercaderías Prohibidas</a>
+                                </li>
+                                <li style="margin-left:5%;">
+                                <a target="_blank" href="#">Términos y Condiciones</a>
+                                </li>
+                            </ul>
+                        </aside>
+                        </section>
+                </p>
+            </div>
+        </div>
+        <div class="contact eleven columns">
+            {% block content-int %} {% endblock %}
+        </div>
+    </div>
+</div>
+{% endblock %}

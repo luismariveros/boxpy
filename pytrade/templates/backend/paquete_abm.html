@@ -1,0 +1,52 @@
+{%extends 'basebs.html' %}
+{% load humanize %}
+{% load bootstrap3 %}
+{% block extra_head %}
+
+
+{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12">
+            {% if editar %}
+                <h3>Editar Paquete</h3>
+            {% else %}
+                <h3>Agregar Paquete</h3>
+            {% endif %}
+        </div>
+    </div><!-- /.row -->
+    <div class="row">
+        <div class="col-lg-6">
+            <form action="" method="POST">
+                {% csrf_token %}
+                {% bootstrap_form form %}
+                {% buttons %}
+                    <button type="submit" class="btn btn-primary">
+                        {% bootstrap_icon "ok-circle" %} Guardar
+                    </button>
+                    <button type="submit" class="btn" name="_addanother">
+                        {% bootstrap_icon "plus-sign" %} Guardar y agregar otro
+                    </button>
+                    <button type="reset" class="btn">
+                        {% bootstrap_icon "remove-circle" %} Limpiar
+                    </button>
+                {% endbuttons %}
+            </form>
+        </div>
+    </div><!-- /.row -->
+{% endblock %}
+
+{% block extra_script %}
+{#    {% include 'autocomplete_light/static.html' %}#}
+{#    <script type="text/javascript" src="/media/bootstrap/js/moment.js"></script>#}
+{#    <script type="text/javascript" src="/media/bootstrap/js/bootstrap-datetimepicker.js"></script>#}
+{#    <script type="text/javascript">#}
+{#        $(function () {#}
+{#            $('#datetimepicker1').datetimepicker({#}
+{#                format: 'DD/mm/YYYY',#}
+{#                weekStart: 1,#}
+{#                language:'es_ES'#}
+{#            });#}
+{#        });#}
+{#    </script>#}
+{% endblock %}

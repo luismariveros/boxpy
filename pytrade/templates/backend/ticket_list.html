@@ -1,0 +1,139 @@
+{% extends "basebs.html" %}
+{% load bootstrap3 %}
+{% load humanize %}
+
+{% block content %}
+    {% if tickets %}
+        <div class="row">
+            <div class="col-lg-6">
+                <h4>Tickets</h4>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="table-responsive">
+                    <table class="table table-condensed table-hover tablesorter" id="tabla_compras">
+                        <thead>
+                            <tr>
+                                <th class="text-center"># <i class="fa fa-sort"></i></th>
+                                <th class="text-center">ID <i class="fa fa-sort"></i></th>
+                                <th class="text-center">Nombre <i class="fa fa-sort"></i></th>
+                                <th class="text-center">Fecha <i class="fa fa-sort"></i></th>
+                                <th class="text-center">Cant. <i class="fa fa-sort"></i></th>
+                                <th class="text-center">Kilos</th>
+                                <th class="text-center">Monto Gs.</th>
+                                <th class="text-center">Monto USD.</th>
+                                <th class="text-center"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for t in tickets %}
+                                <tr id="tr{{ t.id }}">
+                                    <td class="text-center">{{ forloop.counter }}</td>
+                                    <td class="text-center">{{ t.id }}</td>
+                                    <td class="text-left">PT{{ t.user.cliente.codigo }} {{ t.user.get_full_name|truncatechars:40 }}</td>
+                                    <td class="text-left">{{ t.fecha|date:"d M Y H:i" }}</td>
+                                    <td class="text-center">{{ t.cantidad_paquete }}</td>
+                                    <td class="text-right">{{ t.peso_sistema }} Kg.</td>
+                                    <td class="text-right">{{ t.monto_gs | intcomma }} Gs.</td>
+                                    <td class="text-right">{{ t.monto_dolar | floatformat:2 }} USD.</td>
+                                    <td>
+                                        <a target="_blank" href="{% url 'vista_detalle_ticket' t.id %}" role="button" class="btn btn-primary btn-sm"><i class="fa fa-print"></i> Imprimir</a>
+                                        <a target="_blank" href="{% url 'vista_factura_cliente' t.id %}" role="button" class="btn btn-info btn-sm"><i class="fa fa-database"></i> Factura</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div><!-- /.row -->
+
+        <ul class="pagination">
+            {% if tickets.has_previous %}
+                <li><a href="?page={{ tickets.previous_page_number }}">&laquo;</a></li>
+            {% endif %}
+
+            {% for i in tickets.paginator.page_range %}
+                {% if i in lista %}
+                    <li {% if tickets.number == i %} class="active" {% endif %}><a href="?page={{i}}">{{i}}</a></li>
+                    {% if lista|length  == 4 and i == 2 %}
+                        <li><a href="#">...</a></li>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+
+            {% for i in lista %}
+                {% if i > 0 %}
+                    <li {% if tickets.number == i %} class="active" {% endif %}><a href="?page={{i}}">{{i}}</a></li>
+                    {% if lista|length  == 4 and i == 2 %}
+                        <li><a href="#">...</a></li>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+
+            {% if tickets.has_next %}
+                <li><a href="?page={{ tickets.next_page_number }}">&raquo;</a></li>
+            {% endif %}
+        </ul>
+
+        <ul class="pagination">
+            {% if tickets.has_previous %}
+                <li><a href="?page={{ tickets.previous_page_number }}">&laquo;</a></li>
+            {% endif %}
+
+            {% for i in tickets.paginator.page_range %}
+
+
+
+                {% if forloop.counter <= 2 or forloop.counter >= tickets.paginator.num_pages %}
+                    <li {% if tickets.number == i %} class="active" {% endif %}><a href="?page={{i}}">{{i}}</a></li>
+                    {% if lista|length  == 4 and i == 2 %}
+                        <li><a href="#">...</a></li>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+
+            {% if tickets.has_next %}
+                <li><a href="?page={{ tickets.next_page_number }}">&raquo;</a></li>
+            {% endif %}
+
+
+
+
+            {% if is_paginated %}
+                {% load i18n %}
+                {% if page_obj.has_previous %}
+                    ‹‹
+                    {% trans "previous" %}
+                {% else %}
+                    ‹‹
+                    {% trans "previous" %}
+                {% endif %}
+                {% for page in pages %}
+                    {% if page %}
+                        {% ifequal page page_obj.number %}
+                            {{ page }}
+                        {% else %}
+                            {{ page }}
+                        {% endifequal %}
+                    {% else %}
+                        ...
+                    {% endif %}
+                {% endfor %}
+                {% if page_obj.has_next %}
+                    {% trans "next" %} ››
+                {% else %}
+                    {% trans "next" %} ››
+                {% endif %}
+            {% endif %}
+        </ul>
+    {% else %}
+        <div class="row">
+            <div class="col-lg-6">
+                <h3>No hay Tickets</h3>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

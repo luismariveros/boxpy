@@ -1,0 +1,393 @@
+{%extends 'basebs.html' %}
+{% load humanize %}
+{% load bootstrap3 %}
+
+{% block extra_head %}
+
+{% endblock %}
+
+{% block content %}
+    {% if aviso %}
+        <div class="row">
+                <div class="col-lg-6">
+                    <div class="alert alert-dismissable alert-danger">
+                      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                      El Cliente tiene una Orden de Compra. Cancelar la deuda primero.
+                    </div>
+                </div>
+            </div><!-- /.row -->
+    {% endif %}
+    {% if cliente %}
+        <div class="row">
+            <div class="col-lg-12">
+                <h3>Entrega de Paquetes</h3>
+            </div>
+        </div><!-- /.row -->
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">Datos del Cliente</div>
+                    <div class="panel-body">
+                        <strong>Nombre:</strong> {{ cliente.user.first_name }} {{ cliente.user.last_name }} - PT{{ cliente.codigo }} |
+                        <strong>Cédula:</strong> {{ cliente.cedula|intcomma }} |
+                        <strong>Costo por Kilo:</strong> {{ costo_kilo }} USD. |
+                        <a href="{% url 'vista_historial_cliente' cliente.user_id %}">Ver Historial</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% if paquetes %}
+            <form action="" method="POST" class="form-inline" role="form" id="formulario">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">Datos del Paquete</div>
+                            <div class="panel-body">
+                                {% csrf_token %}
+                                <!-- Tabla con los datos de Paquetes -->
+                                <div class="table-responsive">
+                                    <table class="table table-condensed table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center"></th>
+                                                <th class="text-center">ID</th>
+                                                <th class="text-center">Código</th>
+                                                <th class="text-center">Descripción</th>
+                                                <th class="text-center">Peso</th>
+                                                <th class="text-center">Envio USD.</th>
+                                                <th class="text-center">Envio Gs.</th>
+                                                <th class="text-center">Costo Seguro Gs.</th>
+                                                <th class="text-center">Fecha en Depósito</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for p in paquetes %}
+                                                <tr>
+                                                    <td class="text-center"><input type="checkbox" name="paquetes[]" value={{ p.id }} checked></td>
+                                                    <td class="text-center"><a href="{% url 'vista_paquete_editar' p.id %}" target="_blank">{{ p.id }}</a></td>
+                                                    <td class="text-center">{{ p.codigo }}</td>
+                                                    <td class="text-left">{{ p.descripcion|truncatechars:30 }}</td>
+                                                    <td class="text-right">{{ p.peso|floatformat:2 }} Kg.<input type="hidden" value="{{ p.peso }}" id="peso_input" name="peso_input" /></td>
+                                                    <td class="text-right">{{ p.costo_envio_dolar|floatformat:2 }} USD.<input type="hidden" value="{{ p.costo_envio_dolar }}" id="costo_envio_dolar" name="costo_envio_dolar" /></td>
+                                                    <td class="text-right">{{ p.costo_envio_gs|intcomma }} Gs.<input type="hidden" value="{{ p.costo_envio_gs }}" id="costo_envio_gs" name="costo_envio_gs" /></td>
+                                                    <td class="text-right">{{ p.costo_seguro|intcomma }} Gs.</td>
+                                                    <td class="text-center">{{ p.fecha_destino|date:"SHORT_DATE_FORMAT" }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                                <tr class="warning">
+                                                    <td class="text-right" colspan="4"><strong>Total Paquetes: <span id="cant_paquetes">{{ paquetes|length }}</span> unid.</strong></td>
+                                                    <td class="text-right"><strong> <span id="peso_total">{{ peso|floatformat:2 }}</span> Kg.</strong></td>
+                                                    <td class="text-right"><strong> <span id="monto_dolar">{{ monto_total_dolar|floatformat:2 }}</span> USD.</strong></td>
+                                                    <td class="text-right"><strong> <span id="monto_gs">{{ montocobrado|intcomma }}</span> Gs.</strong></td>
+                                                    <td class="text-right"><strong>{{ costo_seguro|intcomma }} Gs.</strong></td>
+                                                    <td class="text-center"></td>
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <input type="hidden" value="{{ cotizacion }}" id="id_cotizacion">
+                                <input type="hidden" value="{{ monto_minimo }}" id="id_monto_minimo">
+                                <input type="hidden" value="{{ cliente.user }}" id="cliente_user" name="cliente_user">
+                                {% bootstrap_field form.cobrado_gs %}
+                                {% bootstrap_field form.cobrado_dolar %}
+                                {% bootstrap_field form.pesocobrado %}
+
+                            </div> <!-- /.panel-body -->
+                            <div class="panel-footer" style="padding: 0px 10px;">
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <h3>Monto Gs: <strong><span id="id_montocobrado"></span> Gs.</strong></h3>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <h3>Monto USD: <strong><span id="id_montocobrado_dolar"></span> USD.</strong></h3>
+                                    </div>
+                                </div>
+                            </div> <!-- /.panel-footer -->
+                        </div> <!-- /.panel-primary -->
+                    </div>
+                </div> <!-- /.row -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="panel panel-info">
+                            <div class="panel-heading">Pagos realizados</div>
+                            <div class="panel-body">
+                                <div class="col-lg-6">
+                                    <div class="table-responsive">
+                                        <table class="table table-condensed table-bordered" id="tabla_pagos">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-center">Monto</th>
+                                                    <th class="text-center">Forma de Pago</th>
+                                                    <th class="text-center">Moneda</th>
+                                                    <th class="text-center col-sm-2"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td><input class="form-control text-right" type="text" name="montopago[]" id="monto_pago" required="True"></td>
+                                                    <td>{% bootstrap_field form.formapago layout="inline" %}</td>
+                                                    <td>{% bootstrap_field form.moneda layout="inline" %}</td>
+                                                    <td>
+                                                        <div class="btn-group btn-group-sm">
+                                                            <button type="button" class="btn btn-default" id="btn_agregar_pago">{% bootstrap_icon "glyphicon glyphicon-plus-sign" %}</button>
+                                                            <button type="button" class="btn btn-default" id="btn_borrar_pago">{% bootstrap_icon "glyphicon glyphicon-minus-sign" %}</button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    {% buttons %}
+                                        <div id='loading' style="display: none"><img src='/media/images/ajax-loader.gif'/></div>
+                                        <button type="button" class="btn btn-primary btn-sm" id="btn_procesar" formtarget="_blank">
+                                            {% bootstrap_icon "ok-circle" %} Procesar
+                                        </button>
+                                        <button type="button" class="btn btn-warning btn-sm" id="btn_divisa">{% bootstrap_icon "glyphicon glyphicon-usd" %} Comprar DIVISA</button>
+                                        <a class="btn btn-info btn-sm" id="btn_ticket" style="display: none" target="_blank"> {% bootstrap_icon "glyphicon glyphicon-align-justify" %} Imprimir Ticket</a>
+                                        <a class="btn btn-danger btn-sm" id="btn_factura" style="display: none" target="_blank"> {% bootstrap_icon "glyphicon glyphicon-list-alt" %} Imprimir Factura</a>
+                                    {% endbuttons %}
+                                </div>
+                                <div class="col-lg-4">
+                                    {% if not cliente.contrato %}
+                                        {% bootstrap_field form.contrato %} <br />
+                                    {% endif %}
+                                    {% bootstrap_field form.delivery %}
+                                </div>
+                            </div> <!-- /.panel-body -->
+                        </div> <!-- /.panel-primary -->
+                    </div>
+                </div> <!-- /.row -->
+            </form>
+            <div class="row" id="bloque_divisa">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Cambio de DIVISA</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div id="compra_divisa" class="col-lg-2">
+                                {% bootstrap_field form.monto_compra_divisa_gs %}
+                            </div>
+                            <div id="compra_divisa" class="col-lg-2">
+                                {% bootstrap_field form.monto_compra_divisa_dolar %}
+                            </div>
+                            <div id="compra_divisa" class="col-lg-1">
+                                <button type="submit" class="btn btn-info btn-lg" id="btn_compra_divisa">
+                                    {% bootstrap_icon "ok-circle" %} Guardar
+                                </button>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="alert alert-warning alert-dismissible" role="alert">
+                                    <strong>Ingresa Dolar a la Caja y Egresa Gs de la Caja</strong>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="alert alert-success alert-dismissible" role="alert" id="alerta_divisa">
+                                    <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                    <strong>Guardado correctamente</strong><br />
+                                    Ingreso Efectivo Dolar y Egreso Efectivo Guaraní en la Caja.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="alert alert-dismissable alert-danger">
+                      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                      El Cliente no tiene paquetes pendientes en Asunción.
+                    </div>
+                </div>
+            </div><!-- /.row -->
+        {% endif %}
+    {% else %}
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="alert alert-dismissable alert-danger">
+                  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                  No existe el Cliente.
+                </div>
+            </div>
+        </div><!-- /.row -->
+    {% endif %}
+    <p><a href="{% url 'vista_busqueda_clientes' 1 %}">Buscar Cliente</a></p>
+{% endblock %}
+
+{% block extra_script %}
+    <script type="text/javascript" src="/media/js/sugar.min.js"></script>
+    <script type="text/javascript" src="/media/js/jquery.validate.js"></script>
+    <script type="text/javascript">
+        // Se ejecuta cuando se carga el formulario
+        $().ready(function(){
+            $('#alerta_divisa').hide();
+            $('#bloque_divisa').hide();
+
+            var montocobrado = parseInt($("#id_cobrado_gs").val());
+            var montocobrado_dolar = parseFloat($("#id_cobrado_dolar").val());
+            $('#id_montocobrado').html((montocobrado).format(0, '.', ','));
+            $('#id_montocobrado_dolar').html((montocobrado_dolar).format(2, '.', ','));
+            $('#monto_pago').focus();
+            var select_loading= $('#id_departamento_residencia').parent();
+		    var div = "<div id='loading' style='display:none'><img src='/media/images/ajax-loader.gif'/></div>" ;
+		    select_loading.append(div);
+        });
+        // Captura el Evento de Cambio de Dropdown Box para actualizar el costo
+        $("#id_formapago").change(function(){
+            actualizar_costo();
+        });
+
+        $(':checkbox').change(function(){
+           actualizar_costo();
+        });
+
+        $("#btn_divisa").click(function(){
+            $('#bloque_divisa').toggle();
+        });
+
+        $("#btn_agregar_pago").click(function(){
+            $(this).closest("tr").clone(true).appendTo("#tabla_pagos");
+        });
+
+        $("#btn_borrar_pago").click(function(){
+            if($('#tabla_pagos tbody tr').length > 1){
+                $(this).closest("tr").remove();
+            }
+        });
+
+        $("#btn_procesar").click(function(){
+            if(isNaN($("#monto_pago").val())){
+                alert('Debe ser un numero decimal. El separador decimal debe ser PUNTO');
+                $("#monto_pago").focus()
+                return false;
+            }else{
+                $('#loading').show();
+                $.ajax({
+                    type : 'POST',
+                    url:"/backend/paquete/wsentregar",
+                    traditional: true,
+                    data: $('#formulario').serialize(),
+                    success:function(res){
+                        $('#loading').hide();
+                        if (res.response=='Error'){
+                            alert('Disculpe, hubo un error lado del servidor.');
+                        }else{
+                            var ticket_id;
+                            $.each(res,function(idx,val){
+                                ticket_id = val.pk;
+                            });
+                            $('#btn_divisa').hide();
+                            $('#btn_ticket').show();
+                            $('#btn_ticket').attr('href','/backend/ticket/' + ticket_id);
+                            $('#btn_factura').show();
+                            $('#btn_factura').attr('href','/backend/facturacliente/' + ticket_id);
+                        }
+                    },
+                    error : function(jqXHR, status, error) {
+                        alert('Disculpe, existió un problema. '+jqXHR.responseText);
+                    }
+                });
+
+            }
+        });
+
+        $("#btn_compra_divisa").click(function(){
+            if ($("#id_monto_compra_divisa_gs").val() == ""){
+                alert('Seleccionar el monto en Guaranies entregado al Cliente');
+                $("#id_monto_compra_divisa_gs").focus()
+                return false;
+            }
+            if ($("#id_monto_compra_divisa_dolar").val() == ""){
+                alert('Seleccionar el monto en Dolar ingresado en Caja');
+                $("#id_monto_compra_divisa_dolar").focus()
+                return false;
+            }
+            if(isNaN($("#id_monto_compra_divisa_gs").val())){
+                alert('Debe ser un numero.');
+                $("#id_monto_compra_divisa_gs").focus()
+                return false;
+            }
+            if(isNaN($("#id_monto_compra_divisa_dolar").val())){
+                alert('Debe ser un numero decimal. El separador decimal debe ser PUNTO');
+                $("#id_monto_compra_divisa_dolar").focus()
+                return false;
+            }
+            $.ajax({
+                type : 'POST',
+                url:"/backend/webservices/ws_compra_divisa",
+                data: {
+                    'monto_compra_divisa_gs' : $('#id_monto_compra_divisa_gs').val(),
+                    'monto_compra_divisa_dolar' : $('#id_monto_compra_divisa_dolar').val(),
+                    "csrfmiddlewaretoken": $('input[name=csrfmiddlewaretoken]').val()
+                },
+                success:function(res){
+                    if (res.response=='Error'){
+                        alert('Disculpe, hubo un error lado del servidor.');
+                    }else{
+                        if (res.response=='OK'){
+                            $('#alerta_divisa').toggle();
+                            $("#btn_compra_divisa").attr("disabled", "disabled");
+                        }
+                    }
+                },
+                error : function(jqXHR, status, error) {
+                    alert('Disculpe, existió un problema. '+jqXHR.responseText);
+                }
+            });
+        });
+
+        {# Funcion para calcular el costo de los paquetes #}
+        function actualizar_costo(){
+            var peso = 0;
+            var costo_envio_gs = 0;
+            var costo_envio_dolar = 0;
+            var monto_minimo = $('#id_monto_minimo').val();
+
+            if($("input[name='paquetes[]']:checked").length > 0){
+                {# Obtener el costo de envio en Gs total #}
+                $.each($("input[name='paquetes[]']:checked"), function() {
+                    var data = $(this).parents('tr:eq(0)');
+                    var cobrado_gs_unitario = parseFloat($(data).find('#costo_envio_gs').val().replace(',','.').replace(' ',''));
+                    var cobrado_dolar_unitario = parseFloat($(data).find('#costo_envio_dolar').val().replace(',','.').replace(' ',''));
+                    costo_envio_gs += cobrado_gs_unitario;
+                    costo_envio_dolar += cobrado_dolar_unitario;
+                    peso += parseFloat($(data).find('#peso_input').val().replace(',','.').replace(' ',''));
+                });
+
+                if(costo_envio_gs<monto_minimo){
+                    costo_envio_gs = monto_minimo;
+                    costo_envio_dolar = parseFloat(costo_envio_gs / $('#id_cotizacion').val());
+                }
+                if ($("#id_formapago").val() == 2){
+                    costo_envio_gs = costo_envio_gs + (10 * costo_envio_gs / 100);
+                    costo_envio_dolar = costo_envio_dolar + (10 * costo_envio_dolar / 100);
+                }
+
+                if(costo_envio_gs%500>0){
+                    costo_envio_gs = (parseInt(costo_envio_gs/500) + 1)*500;
+                }
+
+                imprimir_valores(peso, costo_envio_gs, costo_envio_dolar);
+            }else{
+                imprimir_valores(0,0,0);
+            }
+        }
+
+        function imprimir_valores(peso, montocobrado_gs, montocobrado_dolar){
+            $('#cant_paquetes').html($('input:checkbox:checked').length);
+            $('#peso_total').html(peso.toFixed(2));
+
+            $("#id_cobrado_gs").attr('value',montocobrado_gs);
+            $('#id_montocobrado').html((montocobrado_gs).format(0,'.', ','));
+            $('#monto_gs').html((montocobrado_gs).format(0,'.', ','));
+
+            $("#id_cobrado_dolar").attr('value',montocobrado_dolar.toFixed(2));
+            $('#id_montocobrado_dolar').html((montocobrado_dolar.format(2,'.', ',')));
+            $('#monto_dolar').html(montocobrado_dolar.format(2,'.', ','));
+        }
+    </script>
+{% endblock %}

@@ -1,0 +1,73 @@
+{% load humanize %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <style type="text/css">
+        table { margin: 1em; width: 200px; }
+{#        td, th {  border: 1px #ccc solid; }#}
+        @page {
+            size: 250pt 400pt;
+            margin-left: 0.2cm;
+            margin-right: 0.2cm;
+            margin-top: 0.4cm;
+
+        }
+    </style>
+</head>
+<body>
+    <div align="center">
+        PyTrade S.R.L.<br />
+        {{ ticket.sucursal.direccion }}<br />
+        Tel: {{ ticket.sucursal.telefono }}
+        {% if ticket.sucursal.celular %}| {{ ticket.sucursal.celular }} {% endif %}
+        | http://www.pytrade.com.py
+        <hr>
+        <span style="font-weight: bold;">RETIRO DE PAQUETES - ID:{{ ticket.id }}</span>
+    </div>
+    Cliente: {{ cliente.codigo }} - {{ cliente.user.first_name }} {{ cliente.user.last_name }}<br />
+    Fecha: {{ ticket.fecha|date:"d/F/Y H:i" }}
+    <hr>
+    Cantidad de Paquetes: <span style="font-weight: bold;">{{ paquetes.count }}</span> <br />
+    Peso Total: <span style="font-weight: bold;">{{ ticket.peso_sistema|floatformat:2 }} Kg.</span>
+    <table>
+        <thead>
+            <tr>
+                <th class="center">Código</th>
+                <th class="center">Descripción</th>
+                <th class="center">Monto Gs.</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for paquete in paquetes %}
+                <tr>
+                    <td style="width: 15%; text-align: right">{{ paquete.codigo }}</td>
+                    <td style="width: 45%; text-align: left" >{{ paquete.descripcion }}</td>
+                    <td style="width: 30%; text-align: right">{{ paquete.costo_envio_gs|intcomma }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <strong>Monto Total:</strong> {{ ticket.monto_gs |intcomma }} Gs.<br />
+    <strong>Monto Total:</strong> {{ ticket.monto_dolar|floatformat:2 }} USD.<br />
+    <strong>Pagos realizados:</strong><br />
+    {% for p in pagos %}
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ forloop.counter }})
+        {% if p.moneda.codigo == "Gs" %}
+            {{ p.monto|intcomma }}
+        {% else %}
+            {{ p.monto|floatformat:2 }}
+        {% endif %}
+        {{ p.moneda }} - {{ p.formapago }} {% if user.is_superuser %} [{{ p.id }}] {% endif %}
+        <br />
+    {% endfor %}
+
+    <hr>
+    <p>RETIRE CONFORME LOS PAQUETES SEÑALADOS</p>
+    <p>Firma</p>
+    <p>Aclaración</p>
+    <hr>
+    <p style="font-weight: bold;text-align: center">NO VÁLIDO COMO COMPROBANTE LEGAL</p>
+
+</body>
+</html>

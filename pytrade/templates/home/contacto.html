@@ -1,0 +1,24 @@
+{% extends "base_lateral.html" %}
+
+{% block content-int %}
+    <div class="sixteen map columns">
+        <iframe width="100%" height="260px" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com.py/maps?q=PyTrade&amp;hl=es&amp;sll=-25.282983,-57.576299&amp;sspn=0.016511,0.033023&amp;hq=PyTrade&amp;t=m&amp;ie=UTF8&amp;hnear=&amp;cid=5736821408188523643&amp;ll=-25.279859,-57.571707&amp;spn=0.009313,0.008497&amp;z=14&amp;iwloc=A&amp;output=embed"></iframe>
+    </div>
+    <div class="sixteen columns"><span class="hr mapdv" style="margin: 0 0 10px;"></span></div>
+    <div class="contact twelve columns">
+        <div class="standard-form compressed">
+            <h4 class="semi">Contáctenos</h4>
+            <div class="form-result"></div>
+            <form action="#" class="contactForm" id="contactus" name="contacto">
+            <input type="text" class="input" id="name" name="name" placeholder="Nombre">
+            <input type="text" class="input" id="email" name="name" placeholder="Email">
+            <input type="text" class="input extend" id="email" name="name" placeholder="Asunto">
+            <textarea name="comment" id="comment" rows="10" cols="65" placeholder="Mensaje"></textarea>
+                <div class="submit">
+                    <a href="#" class="button color"><span>Enviar</span></a>
+                </div>
+                <div class="clear"></div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,74 @@
+{% load humanize %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <style type="text/css">
+        table { margin: 1em; width: 200px; }
+{#        td, th {  border: 1px #ccc solid; }#}
+        @page {
+            size: 250pt 400pt;
+            margin-left: 0.2cm;
+            margin-right: 0.2cm;
+            margin-top: 0.4cm;
+
+        }
+    </style>
+</head>
+<body>
+    <div align="center">
+        PyTrade S.R.L.<br />
+        San Benigno 995 c/ Federación Rusa<br />
+        Tel: (021) 609-196 - http://www.pytrade.com.py
+        <hr>
+        <span style="font-weight: bold;">RECIBO DE DINERO</span>
+    </div>
+    Cliente: {{ cliente.codigo }} - {{ cliente.user.get_full_name }}<br />
+    Cédula: {{ cliente.cedula }}
+    Fecha: {% now "d/F/Y H:i" %}
+    <hr>
+    Orden de Compra ID: <span style="font-weight: bold;">{{ compra.id }}</span>
+    Descripción: <span style="font-weight: bold;">{{ compra.descripcion }}</span>
+    Valor Producto: <span style="font-weight: bold;">{{ compra.valor_dolar }} USD.</span>
+    Comisión: <span style="font-weight: bold;">{{ compra.comision_dolar }} USD.</span>
+    Total Orden de Compra: <span style="font-weight: bold;">{{ compra.get_total_dolar|floatformat:2 }} USD.</span>
+    Total Orden de Compra: <span style="font-weight: bold;">{{ compra.get_total_gs|intcomma }} Gs.</span>
+    <hr>
+
+
+
+    <table>
+        <thead>
+            <tr>
+                <th class="center">ID</th>
+                <th class="center">Descripción</th>
+                <th class="center">Peso</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for paquete in paquetes %}
+                <tr>
+                    <td style="width: 15%; text-align: right">{{ paquete.id }}</td>
+        {#            <td class="center">{{ paquete.fecha|date:"SHORT_DATE_FORMAT" }}</td>#}
+                    <td style="width: 45%; text-align: left" >{{ paquete.descripcion }}</td>
+                    <td style="width: 20%; text-align: right">{{ paquete.peso|floatformat:2 }} Kg.</td>
+                </tr>
+            {% endfor %}
+            <tr>
+                <td colspan="2" style="text-align: right; font-weight: bold">Peso Total: </td>
+                <td style="text-align: right; font-weight: bold"">{{ ticket.peso_cobrado|floatformat:2 }} Kg.</td>
+            </tr>
+        </tbody>
+    </table>
+    Forma de Pago: <span style="font-weight: bold;">{{ ticket.formapago.nombre }}<br /></span>
+    Costo Total: <span style="font-weight: bold;">{{ ticket.monto_gs|intcomma }} Gs.<br /></span>
+    Costo Total: <span style="font-weight: bold;">{{ ticket.monto_dolar|floatformat:2 }} U$d.<br /></span>
+    <hr>
+    <p>RETIRE CONFORME LOS PAQUETES SEÑALADOS</p>
+    <p>Firma</p>
+    <p>Aclaración</p>
+    <hr>
+    <p style="font-weight: bold;text-align: center">NO SIRVE COMO COMPROBANTE LEGAL</p>
+
+</body>
+</html>

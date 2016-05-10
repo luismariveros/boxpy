@@ -1,0 +1,364 @@
+{%extends 'basebs.html' %}
+{% load humanize %}
+{% load bootstrap3 %}
+{% block extra_head %}{% endblock %}
+{% block content %}
+    {% if not messages %}
+        <div class="row">
+            <div class="col-lg-12">
+                <h3>Cierre de Caja <small>  Caja Abierta del {{ caja_solicitada.created_at|date:"DATETIME_FORMAT" }}</small></h3>
+            </div>
+        </div><!-- /.row -->
+        <form action="" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">Caja Gs.</div>
+                        <ul class="list-group">
+                            <li class="list-group-item" style="padding-left: 5px"><span class="label label-default">SALDO APERTURA</span></li>
+                        </ul>
+                        <div class="panel-body" style="padding: 0px 5px">
+                            {% if caja_solicitada %}
+                                    <table class="table table-bordered">
+                                        <tr>
+                                            <td>Efectivo:</td>
+                                            <td class="text-right">{{ caja_solicitada.monto_gs|intcomma }} Gs.</td>
+                                        </tr>
+                                    </table>
+                            {% else %}
+                                <strong>No existe Caja abierta.</strong>
+                            {% endif %}
+                        </div>
+                        <ul class="list-group">
+                            <li class="list-group-item" style="padding-left: 5px"><span class="label label-success">INGRESOS - TICKETS</span></li>
+                        </ul>
+                        <div class="panel-body" style="padding: 0px 5px">
+                            {% if tickets_gs %}
+                                    <table class="table table-bordered">
+                                        {% for t in tickets_gs %}
+                                            <tr>
+                                                <td>{{ t.pago__formapago }}:</td>
+                                                <td class="text-right">{{ t.total|intcomma }} Gs.</td>
+                                            </tr>
+                                        {% endfor %}
+                                        <tr>
+                                            <td class="text-right"><strong>Total:</strong></td>
+                                            <td class="text-right"><strong>{{ tickets_total_gs|intcomma }} Gs.</strong></td>
+                                        </tr>
+                                    </table>
+                            {% else %}
+                                <strong>No hay movimiento.</strong>
+                            {% endif %}
+                        </div>
+                        <ul class="list-group">
+                            <li class="list-group-item" style="padding-left: 5px"><span class="label label-success">INGRESOS - COMPRAS</span></li>
+                        </ul>
+                        <div class="panel-body">
+                            {% if compras_gs %}
+                                    <table class="table table-bordered">
+                                        {% for c in compras_gs %}
+                                            <tr>
+                                                <td>{{ c.formapago }}:</td>
+                                                <td class="text-right">{{ c.total|intcomma }} Gs.</td>
+                                            </tr>
+                                        {% endfor %}
+                                        <tr>
+                                            <td class="text-right"><strong>Total:</strong></td>
+                                            <td class="text-right"><strong>{{ compras_total_gs|intcomma }} Gs.</strong></td>
+                                        </tr>
+                                    </table>
+                            {% else %}
+                                <strong>No hay movimiento.</strong>
+                            {% endif %}
+                        </div>
+                        <ul class="list-group">
+                            <li class="list-group-item" style="padding-left: 5px"><span class="label label-info">INGRESOS - OTROS</span></li>
+                        </ul>
+                        <div class="panel-body" style="padding: 0px 5px">
+                            {% if ingresos_otros_gs %}
+                                    <table class="table table-bordered">
+                                        {% for t in ingresos_otros_gs %}
+                                            <tr>
+                                                <td>{{ t.formapago }} [{{ t.motivo }}]:</td>
+                                                <td class="text-right">{{ t.total|intcomma }} Gs.</td>
+                                            </tr>
+                                        {% endfor %}
+                                        <tr>
+                                            <td class="text-right"><strong>Total:</strong></td>
+                                            <td class="text-right"><strong>{{ ingresos_otros_total_gs|intcomma }} Gs.</strong></td>
+                                        </tr>
+                                    </table>
+                            {% else %}
+                                <strong>No hay movimiento</strong>
+                            {% endif %}
+                        </div>
+                        <ul class="list-group">
+                            <li class="list-group-item" style="padding-left: 5px"><span class="label label-danger">EGRESOS</span></li>
+                        </ul>
+                        <div class="panel-body" style="padding: 0px 5px">
+                            {% if egresos_gs %}
+                                    <table class="table table-bordered">
+                                        {% for t in egresos_gs %}
+                                            <tr>
+                                                <td>{{ t.formapago }}:</td>
+                                                <td class="text-right">{{ t.total|intcomma }} Gs.</td>
+                                            </tr>
+                                        {% endfor %}
+                                        <tr>
+                                            <td class="text-right"><strong>Total:</strong></td>
+                                            <td class="text-right"><strong>{{ egreso_total_gs|intcomma }} Gs.</strong></td>
+                                        </tr>
+                                    </table>
+                            {% else %}
+                                <strong>No hay movimiento.</strong>
+                            {% endif %}
+                        </div>
+                        <div class="panel-footer">
+                            <h3 style="margin-top: 0;"><span class="label label-info">RESUMEN DE CAJA</span></h3>
+                            {% bootstrap_field form.saldo_gs %}
+                            <table class="table table-bordered">
+                                <tr>
+                                    <td><strong>Faltante Gs:</strong></td>
+                                    <td class="text-right">{% bootstrap_field form.faltante_gs layout="inline" %}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Sobrante Gs:</strong></td>
+                                    <td class="text-right">{% bootstrap_field form.sobrante_gs layout="inline" %}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Efectivo Caja:</strong></td>
+                                    <td class="text-right"><strong>{{ efectivo_gs|intcomma }} Gs.</strong></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Egresos Caja:</strong></td>
+                                    <td class="text-right"><strong>{{ egreso_total_gs|intcomma }} Gs.</strong></td>
+                                </tr>
+                                <tr class="success">
+                                    <td class="text-right text-warning"><strong>Saldo General:</strong></td>
+                                    <td class="text-right text-warning"><strong><span id="saldo_total_gs"> {{ saldo_gs|intcomma }}</span> Gs.</strong></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">Caja Dólares</div>
+                        <ul class="list-group">
+                            <li class="list-group-item" style="padding-left: 5px"><span class="label label-default">SALDO APERTURA</span></li>
+                        </ul>
+                        <div class="panel-body" style="padding: 0px 5px">
+                            {% if caja_solicitada %}
+                                    <table class="table table-bordered">
+                                        <tr>
+                                            <td>Efectivo:</td>
+                                            <td class="text-right">{{ caja_solicitada.monto_dolar|floatformat:2 }} USD.</td>
+                                        </tr>
+                                    </table>
+                            {% else %}
+                                <strong>No existe Caja abierta.</strong>
+                            {% endif %}
+                        </div>
+                        <ul class="list-group">
+                            <li class="list-group-item" style="padding-left: 5px"><span class="label label-success">INGRESOS - TICKETS</span></li>
+                        </ul>
+                        <div class="panel-body" style="padding: 0px 5px">
+                            {% if tickets_dolar %}
+                                    <table class="table table-bordered">
+                                        {% for t in tickets_dolar %}
+                                            <tr>
+                                                <td>{{ t.pago__formapago }}:</td>
+                                                <td class="text-right">{{ t.total }} USD.</td>
+                                            </tr>
+                                        {% endfor %}
+                                        <tr>
+                                            <td class="text-right"><strong>Total:</strong></td>
+                                            <td class="text-right"><strong>{{ tickets_total_dolar|floatformat:2 }} USD.</strong></td>
+                                        </tr>
+                                    </table>
+                            {% else %}
+                                <strong>No hay movimiento</strong>
+                            {% endif %}
+                        </div>
+                        <ul class="list-group">
+                            <li class="list-group-item" style="padding-left: 5px"><span class="label label-success">INGRESOS - COMPRAS</span></li>
+                        </ul>
+                        <div class="panel-body">
+                            {% if compras_dolar %}
+                                    <table class="table table-bordered">
+                                        {% for c in compras_dolar %}
+                                            <tr>
+                                                <td>{{ c.formapago }}:</td>
+                                                <td class="text-right">{{ c.total|floatformat:2 }} USD.</td>
+                                            </tr>
+                                        {% endfor %}
+                                        <tr>
+                                            <td class="text-right"><strong>Total:</strong></td>
+                                            <td class="text-right"><strong>{{ compras_total_dolar|floatformat:2 }} USD.</strong></td>
+                                        </tr>
+                                    </table>
+                            {% else %}
+                                <strong>No hay movimiento.</strong>
+                            {% endif %}
+                        </div>
+                        <ul class="list-group">
+                            <li class="list-group-item" style="padding-left: 5px"><span class="label label-info">INGRESOS - OTROS</span></li>
+                        </ul>
+                        <div class="panel-body" style="padding: 0px 5px">
+                            {% if ingresos_otros_dolar %}
+                                    <table class="table table-bordered">
+                                        {% for t in ingresos_otros_dolar %}
+                                            <tr>
+                                                <td>{{ t.formapago }} [{{ t.motivo }}]:</td>
+                                                <td class="text-right">{{ t.total }} USD.</td>
+                                            </tr>
+                                        {% endfor %}
+                                        <tr>
+                                            <td class="text-right"><strong>Total:</strong></td>
+                                            <td class="text-right"><strong>{{ ingresos_otros_total_dolar|floatformat:2 }} USD.</strong></td>
+                                        </tr>
+                                    </table>
+                            {% else %}
+                                <strong>No hay movimiento</strong>
+                            {% endif %}
+                        </div>
+                        <ul class="list-group">
+                            <li class="list-group-item" style="padding-left: 5px"><span class="label label-danger">EGRESOS</span></li>
+                        </ul>
+                        <div class="panel-body" style="padding: 0px 5px">
+                            {% if egresos_dolar %}
+                                    <table class="table table-bordered">
+                                        {% for t in egresos_dolar %}
+                                            <tr>
+                                                <td>{{ t.formapago }}:</td>
+                                                <td class="text-right">{{ t.total }} USD.</td>
+                                            </tr>
+                                        {% endfor %}
+                                        <tr>
+                                            <td class="text-right"><strong>Total:</strong></td>
+                                            <td class="text-right"><strong>{{ egreso_total_dolar|floatformat:2 }} USD.</strong></td>
+                                        </tr>
+                                    </table>
+                            {% else %}
+                                <strong>No hay movimiento</strong>
+                            {% endif %}
+                        </div>
+                        <div class="panel-footer">
+                            <h3 style="margin-top: 0;"><span class="label label-info">RESUMEN DE CAJA</span></h3>
+                            {% bootstrap_field form.saldo_dolar %}
+                            <table class="table table-bordered">
+                                <tr>
+                                    <td><strong>Faltante Dolar:</strong></td>
+                                    <td class="text-right">{% bootstrap_field form.faltante_dolar layout="inline" %}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Sobrante Dolar:</strong></td>
+                                    <td class="text-right">{% bootstrap_field form.sobrante_dolar layout="inline" %}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Efectivo Caja:</strong></td>
+                                    <td class="text-right"><strong>{{ efectivo_dolar|floatformat:2 }} USD.</strong></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Egresos Caja:</strong></td>
+                                    <td class="text-right"><strong>{{ egreso_total_dolar|floatformat:2 }} USD.</strong></td>
+                                </tr>
+                                <tr class="success">
+                                    <td class="text-right text-warning"><strong>Saldo General:</strong></td>
+                                    <td class="text-right text-warning"><strong><span id="saldo_total_dolar"> {{ saldo_dolar|floatformat:2 }}</span> USD.</strong></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">Cierre de Caja</div>
+
+
+
+                        <div class="panel-body">
+                            <h4>Archivo de Arqueo de Caja:</h4>
+                            {% bootstrap_field form.arqueo layout="inline" %}
+                            {% bootstrap_field form.comentario layout="inline" %}
+                            <button type="submit" class="btn btn-primary">
+                                    {% bootstrap_icon "ok-circle" %} Cerrar Caja
+                                </button>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div><!-- /.row -->
+        </form>
+    {% endif %}
+
+{% endblock %}
+{% block extra_script %}
+    <script type="text/javascript" src="/media/js/sugar.min.js"></script>
+    <script type="text/javascript">
+        $("#id_faltante_gs").keyup(function(event){
+            if(event.which == 13){
+                event.preventDefault();
+            }
+            var eThis = $(this);
+            var valor_this = (isNaN(eThis.val())) ? 0 : eThis.val();
+            var saldo_total_gs = parseInt($("#id_saldo_gs").val());
+
+            if(valor_this>0){
+                saldo_total_gs = saldo_total_gs - parseInt(valor_this);
+            }
+
+            $('#saldo_total_gs').html((saldo_total_gs).format(0, '.', ','));
+        });
+
+        $("#id_sobrante_gs").keyup(function(event){
+            if(event.which == 13){
+                event.preventDefault();
+            }
+            var eThis = $(this);
+            var valor_this = (isNaN(eThis.val())) ? 0 : eThis.val();
+            var saldo_total_gs = parseInt($("#id_saldo_gs").val());
+
+            if(valor_this>0){
+                saldo_total_gs = saldo_total_gs + parseInt(valor_this);
+            }
+
+            $('#saldo_total_gs').html((saldo_total_gs).format(0, '.', ','));
+        });
+
+        $("#id_faltante_dolar").keyup(function(event){
+            if(event.which == 13){
+                event.preventDefault();
+            }
+            var eThis = $(this);
+            var valor_this = (isNaN(eThis.val())) ? 0 : eThis.val();
+            var saldo_total_dolar = parseFloat($("#id_saldo_dolar").val());
+
+            if(valor_this>0){
+                saldo_total_dolar = saldo_total_dolar - parseFloat(valor_this);
+            }
+
+            $('#saldo_total_dolar').html((saldo_total_dolar).format(2, '.', ','));
+        });
+
+        $("#id_sobrante_dolar").keyup(function(event){
+            var eThis = $(this);
+            var valor_this = (isNaN(eThis.val())) ? 0 : eThis.val();
+            var saldo_total_dolar = parseFloat($("#id_saldo_dolar").val());
+
+            if(valor_this>0){
+                saldo_total_dolar = saldo_total_dolar + parseFloat(valor_this);
+            }
+
+            $('#saldo_total_dolar').html((saldo_total_dolar).format(2, '.', ','));
+        });
+    </script>
+{% endblock %}

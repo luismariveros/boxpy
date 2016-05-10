@@ -1,0 +1,79 @@
+{% extends "basebs.html" %}
+{% load bootstrap3 %}
+{% load humanize %}
+
+{% block content %}
+    {% if clientes %}
+        <div class="row">
+            <div class="col-lg-3">
+                <h4>Informe de Clientes por Carga</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-2">
+                <li class="list-group-item"><span class="badge">{{ resumen.total_paquetes|intcomma }}</span> Total Paquetes</li>
+            </div>
+            <div class="col-lg-2">
+                <li class="list-group-item"><span class="badge">{{ resumen.total_tickets|intcomma }}</span> Total Tickets</li>
+            </div>
+            <div class="col-lg-2">
+                <li class="list-group-item"><span class="badge">{{ resumen.total_peso }}</span> Total Peso</li>
+            </div>
+            <div class="col-lg-2">
+                <li class="list-group-item"><span class="badge">{{ resumen.total_dolar }}</span> Total USD</li>
+            </div>
+            <div class="col-lg-2">
+                <li class="list-group-item"><span class="badge">{{ resumen.total_gs|intcomma }}</span> Total Gs</li>
+            </div>
+            <div class="col-lg-2">
+                <li class="list-group-item"><span class="badge">{{ sin_paquete|intcomma }}</span> Nunca trajeron</li>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="table-responsive">
+                    <table class="table table-hover tablesorter" id="tabla_compras">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Cliente</th>
+                                <th class="text-center">Cant. Paquetes</th>
+                                <th class="text-center">Cant. Tickets</th>
+                                <th class="text-center">Peso Total</th>
+                                <th class="text-center">USD Total</th>
+                                <th class="text-center">Gs Total</th>
+                                <th class="text-center">Último Ticket</th>
+                                <th class="text-center">Fecha Ingreso</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for c in clientes %}
+                                {% if c.cantidad_paquetes %}
+                                    <tr>
+                                        <td class="text-left"><a href="{% url 'vista_historial_cliente' c.user_id %}"> PT{{ c.codigo }} - {{ c }}</a></td>
+                                        <td class="text-right">{{ c.cantidad_paquetes }}</td>
+                                        <td class="text-right">{{ c.cantidad_tickets }}</td>
+                                        <td class="text-right">{{ c.peso }}</td>
+                                        <td class="text-right">{{ c.dolar }}</td>
+                                        <td class="text-right">{{ c.gs|intcomma }}</td>
+                                        <td class="text-center">{{ c.fecha|date:"SHORT_DATE_FORMAT" }}</td>
+                                        <td class="text-center">{{ c.user.date_joined|date:"SHORT_DATE_FORMAT" }}</td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                            <tr class="warning">
+                                <td></td>
+                                <td class="text-right"><strong>{{ resumen.total_paquetes|intcomma }}</strong></td>
+                                <td class="text-right"><strong>{{ resumen.total_tickets|intcomma }}</strong></td>
+                                <td class="text-right"><strong>{{ resumen.total_peso|floatformat:2 }}</strong></td>
+                                <td class="text-right"><strong>{{ resumen.total_dolar|floatformat:2 }}</strong></td>
+                                <td class="text-right"><strong>{{ resumen.total_gs|intcomma }}</strong></td>
+                                <td colspan="2"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div><!-- /.row -->
+    {% endif %}
+{% endblock %}

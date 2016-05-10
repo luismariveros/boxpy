@@ -1,0 +1,205 @@
+{% extends "base_lateral.html" %}
+
+{% block content-int %}
+<div class="twelve columns">
+    <div class="sidebar-right"><br /><br />
+        <div class="two-thirds column alpha">
+            <div class="title-wrapper">
+                <div class="section-title">
+                    <h4 class="title">Preguntas Frecuentes</h4>
+                </div>
+                <span class="divider"></span>
+                <div class="clear"></div>
+            </div>
+            <ul class="accordion" id="1">
+                <li>
+                    <div class="parent first">
+                        <h6><div class="accordion-caption"></div>¿Cómo me suscribo?</h6>
+                    </div>
+                    <div class="tcontent">
+                        <p>Para obtener su casilla (o dirección física) sólo debe registrarse completando los campos que figuran <a href="{% url 'vista_registrar' %}">aquí</a> o con tu cuenta de Facebook para facilitar el registro.</p>
+                    </div>
+                </li>
+                <li>
+                    <div class="parent">
+                        <h6><div class="accordion-caption"></div>¿Cuáles son los requisitos?</h6>
+                    </div>
+                    <div class="tcontent">
+                     <p> No tiene ningún requisito adicional más que el de completar con sus datos el formulario y aceptar nuestros <a href="/media/contrato-pytrade.pdf" target="_blank">
+                     Términos y Condiciones</a>, que regulan las obligaciones y responsabilidades de cada parte en la prestación del servicio. </p>
+                    </div>
+                </li>
+                <li>
+                    <div class="parent">
+                        <h6><div class="accordion-caption"></div>¿Tiene algún costo suscribirse?</h6>
+                    </div>
+                    <div class="tcontent">
+                     <p>Obtener tu casilla es totalmente GRATIS en Pytrade, no pagas ni suscripción ni mantenimiento anual como otros couriers.</p>
+                    </div>
+                </li>
+                <li>
+                    <div class="parent first">
+                        <h6><div class="accordion-caption"></div>¿Cómo se compra por internet?</h6>
+                    </div>
+                    <div class="tcontent">
+                        <p>Todas las páginas de venta online funcionan básicamente en tres simples pasos:  </p>
+                        <ul>
+                            <li><img src="/media/images/favicon.ico" style="width:8px;height:8px;"/> Usted elige el producto que desea al precio que la página web</li>
+                            <li><img src="/media/images/favicon.ico" style="width:8px;height:8px;"/> Selecciona la dirección donde desea recibir el producto (Shipping address – Dirección de envío)</li>
+                            <li><img src="/media/images/favicon.ico" style="width:8px;height:8px;"/> Realiza el pago del mismo</li>
+                        </ul>
+                        <p>Nos encantaría ayudarlo paso a paso si es una de sus primeras compras, por favor llame a nuestros asistentes.</p>
+                    </div>
+                </li>
+                <li>
+                    <div class="parent">
+                        <h6><div class="accordion-caption"></div>¿En qué páginas puedo comprar?</h6>
+                    </div>
+                    <div class="tcontent">
+                        <p>Usted puede comprar en cualquier página que desee, siempre y cuando realice envios a la dirección que le proporcionemos en Estados Unidos. Si desea una serie de sugerencias para
+                            diferentes tipos de producto haga click <a href="#">aquí</a>
+                        </p>
+                        <p>Si la página que elige no acepta su tarjeta de crédito o le pide pagar con PayPal, no se preocupe. Nosotros podemos brindarle el servicio de compra a través de nuestros asistentes
+                           de compras. Es muy fácil, puede acceder <a href="#">aquí</a>, completar el formulario y nuestros asesores se pondrán en contacto con usted. O bien puede enviarnos un mail a
+                            <a href="mailto:compras@pytrade.com.py">compras@pytrade.com.py</a>
+                        </p>
+                    </div>
+                </li>
+                <li>
+                    <div class="parent">
+                        <h6><div class="accordion-caption"></div>¿Qué artículos no pueden enviarse?</h6>
+                    </div>
+                    <div class="tcontent">
+                        <p>Existe una serie de productos cuyo transporte esta prohibido via aérea y/o su importación vedada por la Aduana paraguaya. Estos productos son: </p>
+                        <ul>
+                            <li><img src="/media/images/favicon.ico" style="width:8px;height:8px;"/> Materiales perecederos</li>
+                            <li><img src="/media/images/favicon.ico" style="width:8px;height:8px;"/>  Armas de fuego, armadas o por partes, asi como municiones.</li>
+                            <li><img src="/media/images/favicon.ico" style="width:8px;height:8px;"/>  Dinero, instrumentos negociables al portador o billetes de lotería.</li>
+                            <li><img src="/media/images/favicon.ico" style="width:8px;height:8px;"/>  Explosivos o productos químicos inflamables,volátiles y/o corrosivos</li>
+                            <li><img src="/media/images/favicon.ico" style="width:8px;height:8px;"/>  Baterías (líquidas).</li>
+                            <li><img src="/media/images/favicon.ico" style="width:8px;height:8px;"/>  Líquidos cuyo contenido exceda los 750ml.</li>
+                            <li><img src="/media/images/favicon.ico" style="width:8px;height:8px;"/>  Oro, Plata en barras, polvo o cualquier forma de materiales semi preciosos, piedras preciosas o semi preciosas.</li>
+                            <li><img src="/media/images/favicon.ico" style="width:8px;height:8px;"/>  Dinero en efectivo ( billete o moneda), documentos y valores negociables, acciones, bonos, cupones, cheques endosados o no.</li>
+                            <li><img src="/media/images/favicon.ico" style="width:8px;height:8px;"/>  Antiguedades y Pinturas.</li>
+                            <li><img src="/media/images/favicon.ico" style="width:8px;height:8px;"/>  Materiales orgánicos o plantas.</li>
+                            <li><img src="/media/images/favicon.ico" style="width:8px;height:8px;"/>  Pornografía.</li>
+                            <li><img src="/media/images/favicon.ico" style="width:8px;height:8px;"/>  Tabaco.</li>
+                            <li><img src="/media/images/favicon.ico" style="width:8px;height:8px;"/>  Drogas de cualquier tipo.</li>
+                        </ul>
+                        <p>Para más información sobre que mercaderías están prohibidas, consulte con nuestros representantes de Atención al Cliente.<br />
+                        El transporte o tráfico de mercaderías prohibidas es entera responsabilidad del cliente y puede implicar multas hasta sanciones penales.</p>
+                    </div>
+                </li>
+                <li>
+                    <div class="parent first">
+                        <h6><div class="accordion-caption"></div>¿Qué es el Shipping Address – Dirección de envío?</h6>
+                    </div>
+                    <div class="tcontent">
+                        <p>El shipping address (en inglés) o dirección de envío, es la dirección física donde el vendedor del sitio online le enviará su compra. Usted al suscribirse a PyTrade recibe una dirección física (Casilla) en el país donde desea realizar sus compras. Su dirección lucirá asi:</p>
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td>Name: </td>
+                                    <td>Código de Casilla PTXXXXX más Su nombre </td>
+                                </tr>
+                                 <tr>
+                                    <td>Lastname: </td>
+                                    <td>Su apellido</td>
+                                </tr>
+                                 <tr>
+                                    <td>Address (line 1):  </td>
+                                    <td>Calle donde se ubica la oficina de PyTrade en USA, colocar: 1925 NW 79th Avenue </td>
+                                </tr>
+                                 <tr>
+                                    <td>City </td>
+                                    <td>Ciudad, colocar: Doral</td>
+                                </tr>
+                                <tr>
+                                    <td>State </td>
+                                    <td>Estado, colocar: Florida o FL</td>
+                                </tr>
+                                <tr>
+                                    <td>ZIP Code:	 </td>
+                                    <td>Código Postal, colocar: 33126</td>
+                                </tr>
+                                 <tr>
+                                    <td>Phone number </td>
+                                    <td>Teléfono, colocar: (305)438 7610 </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </li>
+                <li>
+                    <div class="parent">
+                        <h6><div class="accordion-caption"></div>¿Qué es el número de casilla?</h6>
+                    </div>
+                    <div class="tcontent">
+                        <p>Es el número identificador compuesto por las iniciales PT y un número de cinco dígitos que son su número de cliente. Este número es muy importante ya que es el código
+                           mediante el cual usted es identificado en PyTrade. Siempre coloque su número de casilla al momento de colocar su dirección de envío en el sitio online.<br />
+                           El no colocar su número de casilla puede ocasionarle inconvenientes por retrasos en la entrega</p>
+                    </div>
+                </li>
+                <li>
+                    <div class="parent">
+                        <h6><div class="accordion-caption"></div>¿Dónde coloco mi número de casilla?</h6>
+                    </div>
+                    <div class="tcontent">
+                     <p>Usted debe colocar su número de casilla siempre en el shipping address o dirección de envio de su compra. En la mayoría de las páginas puede colocar su casilla (PTXXXXX)
+                        al lado de su nombre, en el campo “name” (nombre) este es el caso de Amazon o de Ebay. En otras páginas, puede colocar su casilla en el campo “Address line 2”. </p>
+                    </div>
+                </li>
+                <li>
+                    <div class="parent first">
+                        <h6><div class="accordion-caption"></div>¿Necesito una tarjeta de crédito para comprar en el exterior?</h6>
+                    </div>
+                    <div class="tcontent">
+                        <p>No necesariamente. Para realizar compras en línea algunas páginas le pedirán eventualmente una tarjeta de crédito
+                           emitida en los Estados Unidos, para esos casos o en caso que no tenga una tarjeta de crédito PyTrade le brinda el servicio "Compramos por Vos",
+                           por el cual nuestros asistentes compran por usted. Es muy fácil, debe estar en su cuenta de PyTrade y acceder <a href="{% url 'vista_comprar' %}">aquí</a>, completa el formulario y
+                           nuestros asesores se pondrán en contacto con usted. O bien puede enviarnos un mail a <a href="mailto:compras@pytrade.com.py">compras@pytrade.com.py</a>
+                        </p>
+                    </div>
+                </li>
+                <li>
+                    <div class="parent">
+                        <h6><div class="accordion-caption"></div>¿Es seguro?</h6>
+                    </div>
+                    <div class="tcontent">
+                     <p>El transporte aéreo tiene el menor porcentaje de daños o hurtos sobre el total de mercadería transportada. En  PyTrade trabajamos con las instalaciones
+                        y equipos adecuados para garantizar el buen manejo de sus cargas. No obstante ante cualquier tipo de imprevisto ajeno a la potestad de la empresa o de
+                        causa mayor existen seguros de carga que cubren el daño parcial o total de su compra. Para más información contacte con
+                        <a href="mailto:info@pytrade.com.py">info@pytrade.com.py</a>.
+                     </p>
+                    </div>
+                </li>
+                <li>
+                    <div class="parent">
+                        <h6><div class="accordion-caption"></div>¿Cuántos días tarda en llegar mi compra?</h6>
+                    </div>
+                    <div class="tcontent">
+                         <p>Es una prioridad de nuestro negocio garantizarle que su compra llegue lo más rápido posible a sus manos. Existen dos tiempos muy importantes al
+                             momento de calcular el tiempo estimado de llegada de su paquete:
+                         </p>
+                        <ul>
+                            <li> <strong>El tiempo de tránsito desde su vendedor hasta nuestros depósitos en el país de origen.</strong><br>
+                                Generalmente existe una cantidad de días que pueden ir desde 1 (uno) a inclusive semanas entre que el pedido llega a nuestros depósitos. El tiempo depende
+                                del delivery que usted pague al momento de comprar o el que elija su vendedor. Por ejemplo, puede pagar 2 day delivery  y su paquete llega en 2 días
+                                a nuestra dirección o standard delivery (que suele ser el delivery predeterminado y mas común) que toma entre 3 a 5 días para llegar a nuestras oficinas.
+                                Generalmente al momento de comprar un producto ellos le comunican el tipo de delivery y las fechas estimadas de entrega (Estimated Delivery).
+                            </li>
+                            <li><strong>El tiempo desde que llega a nuestros depósitos hasta que llega a sus manos. </strong><br>
+                                Una vez que su paquete llega a nuestros depósitos en el extranjero, procedemos a su verificación, pesaje, carga en el sistema y preparación para embarque
+                                en el próximo vuelo mas cercano. Contamos con 1 vuelo semanal, por lo cual una vez recibido su paquete (y si se encuentra debidamente identificado con
+                                su casilla) tiene un tiempo máximo de arribo de 5 dias hábiles (asumiendo que los tiempos de transito de la aerolínea y el proceso de liberación de Aduana
+                                se cumplan). Los vendedores online le brindan un número de tracking o número de rastreo de cada paquete en el que envían sus compras para que usted pueda
+                                darle seguimiento al tránsito del mismo.
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

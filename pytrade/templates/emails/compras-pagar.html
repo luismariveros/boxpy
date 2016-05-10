@@ -1,0 +1,37 @@
+{% load i18n %}
+{% load url from future %}
+
+<p> <strong>{{ cliente.user.first_name }} {{ cliente.user.last_name }}</strong> ya pagó su Orden de Compra</p>
+=================<br />
+Datos del Cliente<br />
+=================<br />
+<strong>Casilla:</strong> <br />
+PT{{ cliente.codigo }}<br />
+<strong>Celular:</strong><br />
+{{ cliente.celular }}<br />
+<strong>Cédula:</strong><br />
+{{ cliente.cedula }}<br />
+{% if cliente.telefono %}
+    <strong>Teléfono:</strong><br />
+    {{ cliente.telefono }}<br />
+{% endif %}
+{% if cliente.direccion %}
+    <strong>Dirección:</strong><br />
+    {{ cliente.direccion }}<br />
+{% endif %}
+<br />
+=================<br />
+Detalle de Compra<br />
+=================<br />
+<strong>Fecha:</strong> <br />
+{{ datos.fecha_solicitud }}<br />
+<strong>URL del Producto:</strong><br />
+{{ datos.enlace }}<br />
+<strong>Comentario:</strong><br />
+{{ datos.comentario }}<br />
+<strong>Valor Total Dolar:</strong><br />
+{{ datos.get_total_dolar }}<br />
+<strong>Valor Total Gs:</strong><br />
+{{ datos.get_total_gs }}<br />
+<strong>Monto Entrega:</strong><br />
+{{ datos.monto_entrega }} {{ datos.moneda_entrega }}<br />

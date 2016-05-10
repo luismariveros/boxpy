@@ -1,0 +1,50 @@
+{%extends 'basebs.html' %}
+{% load humanize %}
+{% load bootstrap3 %}
+{% block extra_head %}{% endblock %}
+{% block content %}
+    {% if not messages %}
+        <!-- Modal -->
+        <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">Apertura de Caja</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>¿Los Datos son correctos?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <form method="post" id="frmAperturaCaja" action="">
+                            {% csrf_token %}
+                            <button class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-danger">Abrir Caja</button>
+                        </form>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+
+        <div class="row">
+            <div class="col-lg-12">
+                <h3>Apertura de Caja <small>  {% now "DATETIME_FORMAT" %}</small></h3>
+            </div>
+        </div><!-- /.row -->
+
+        <div class="row">
+            <div class="col-lg-3">
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    {% bootstrap_form form %}
+
+                    {% buttons %}
+                        <a href="#myModal" role="button" class="btn btn-primary" data-toggle="modal"><i class="fa fa-pencil"></i> Abrir Caja</a>
+                    {% endbuttons %}
+                </form>
+            </div>
+        </div><!-- /.row -->
+    {% endif %}
+{% endblock %}
+
+{% block extra_script %}{% endblock %}

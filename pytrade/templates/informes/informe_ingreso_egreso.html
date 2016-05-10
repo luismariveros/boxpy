@@ -1,0 +1,466 @@
+{%extends 'basebs.html' %}
+{% load humanize %}
+{% load bootstrap3 %}
+{% block extra_head %}
+    {{ form.media }}
+{% endblock %}
+{% block content %}
+    {% if not messages %}
+        <div class="row">
+            <div class="col-lg-12">
+                <h3>Informe de Ingresos y Egresos <small>Desde:{{ f_desde|date:"SHORT_DATE_FORMAT" }} - Hasta: {{ f_hasta|date:"SHORT_DATE_FORMAT" }}</small></h3>
+            </div>
+        </div><!-- /.row -->
+        <div class="row">
+            <div class="col-lg-6">
+                <form action="" method="GET" role="form">
+                    {% bootstrap_form form layout="inline" %}
+                    {% buttons %}
+                        <button type="submit" class="btn btn-primary btn-sm">
+                            {% bootstrap_icon "search" %} Buscar
+                        </button>
+                    {% endbuttons %}
+                </form>
+            </div>
+        </div>  <!-- /.row -->
+        <div class="row"> <!-- Ingresos y Egresos Gs y USD -->
+            <div class="col-lg-6">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">Ingresos y Egresos en Gs.</div>
+                    <ul class="list-group">
+                        <li class="list-group-item" style="padding-left: 5px"><span class="label label-success">INGRESOS - TICKETS</span> <a class="btn btn-default btn-xs" role="button" id="detalle_tickets_ver">Ver Detalle</a></li>
+                    </ul>
+                    <div class="panel-body" style="padding: 0px 5px">
+                        {% if tickets_gs %}
+                            <table class="table table-bordered">
+                                {% for t in tickets_gs %}
+                                    <tr>
+                                        <td>{{ t.pago__formapago }}:</td>
+                                        <td class="text-right">{{ t.total|intcomma }} Gs.</td>
+                                    </tr>
+                                {% endfor %}
+                                <tr>
+                                    <td class="text-right"><strong>Total:</strong></td>
+                                    <td class="text-right"><strong>{{ tickets_total_gs|intcomma }} Gs.</strong></td>
+                                </tr>
+                            </table>
+                        {% else %}
+                            <strong>No hay movimiento.</strong>
+                        {% endif %}
+                    </div>
+                    <ul class="list-group">
+                        <li class="list-group-item" style="padding-left: 5px"><span class="label label-success">INGRESOS - COMPRAS</span> <a class="btn btn-default btn-xs" role="button" id="detalle_compras_ver">Ver Detalle</a></li>
+                    </ul>
+                    <div class="panel-body">
+                        {% if compras_gs %}
+                            <table class="table table-bordered">
+                                {% for c in compras_gs %}
+                                    <tr>
+                                        <td>{{ c.formapago }}:</td>
+                                        <td class="text-right">{{ c.total|intcomma }} Gs.</td>
+                                    </tr>
+                                {% endfor %}
+                                <tr>
+                                    <td class="text-right"><strong>Total:</strong></td>
+                                    <td class="text-right"><strong>{{ compras_total_gs|intcomma }} Gs.</strong></td>
+                                </tr>
+                            </table>
+                        {% else %}
+                            <strong>No hay movimiento.</strong>
+                        {% endif %}
+                    </div>
+                    <ul class="list-group">
+                        <li class="list-group-item" style="padding-left: 5px"><span class="label label-info">INGRESOS - OTROS</span> <a class="btn btn-default btn-xs" role="button" id="detalle_ingresos_otros_ver">Ver Detalle</a></li>
+                    </ul>
+                    <div class="panel-body">
+                        {% if ingresos_otros_gs %}
+                            <table class="table table-bordered">
+                                {% for t in ingresos_otros_gs %}
+                                    <tr>
+                                        <td>{{ t.formapago }} [{{ t.motivo }}]:</td>
+                                        <td class="text-right">{{ t.total|intcomma }} Gs.</td>
+                                    </tr>
+                                {% endfor %}
+                                <tr>
+                                    <td class="text-right"><strong>Total:</strong></td>
+                                    <td class="text-right"><strong>{{ ingresos_otros_total_gs|intcomma }} Gs.</strong></td>
+                                </tr>
+                            </table>
+                        {% else %}
+                            <strong>No hay movimiento</strong>
+                        {% endif %}
+                    </div>
+                    <ul class="list-group">
+                        <li class="list-group-item" style="padding-left: 5px"><span class="label label-danger">EGRESOS</span> <a class="btn btn-default btn-xs" role="button" id="detalle_egresos_ver">Ver Detalle</a></li>
+                    </ul>
+                    <div class="panel-body" style="padding: 0px 5px">
+                        {% if egresos_gs %}
+                            <table class="table table-bordered">
+                                {% for t in egresos_gs %}
+                                    <tr>
+                                        <td>{{ t.formapago }}:</td>
+                                        <td class="text-right">{{ t.total|intcomma }} Gs.</td>
+                                    </tr>
+                                {% endfor %}
+                                <tr>
+                                    <td class="text-right"><strong>Total:</strong></td>
+                                    <td class="text-right"><strong>{{ egreso_total_gs|intcomma }} Gs.</strong></td>
+                                </tr>
+                            </table>
+                        {% else %}
+                            <strong>No hay movimiento.</strong>
+                        {% endif %}
+                    </div>
+                    <div class="panel-footer">
+                        <h4 style="margin-top: 0;"><span class="label label-info">RESUMEN GENERAL Gs.</span></h4>
+
+                        <table class="table table-bordered">
+                            <tr>
+                                <td><strong>Ingreso Total:</strong></td>
+                                <td class="text-right"><strong>{{ ingreso_total_gs|intcomma }} Gs.</strong></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Egresos Total:</strong></td>
+                                <td class="text-right"><strong>{{ egreso_total_gs|intcomma }} Gs.</strong></td>
+                            </tr>
+                            <tr class="success">
+                                <td class="text-right text-warning"><strong>Saldo General:</strong></td>
+                                <td class="text-right text-warning"><strong><span id="saldo_total_gs"> {{ saldo_gs|intcomma }}</span> Gs.</strong></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">Ingresos y Egresos en Dólares.</div>
+                    <ul class="list-group">
+                        <li class="list-group-item" style="padding-left: 5px"><span class="label label-success">INGRESOS - TICKETS</span></li>
+                    </ul>
+                    <div class="panel-body" style="padding: 0px 5px">
+                        {% if tickets_dolar %}
+                            <table class="table table-bordered">
+                                {% for t in tickets_dolar %}
+                                    <tr>
+                                        <td>{{ t.pago__formapago }}:</td>
+                                        <td class="text-right">{{ t.total }} USD.</td>
+                                    </tr>
+                                {% endfor %}
+                                <tr>
+                                    <td class="text-right"><strong>Total:</strong></td>
+                                    <td class="text-right"><strong>{{ tickets_total_dolar|floatformat:2 }} USD.</strong></td>
+                                </tr>
+                            </table>
+                        {% else %}
+                            <strong>No hay movimiento</strong>
+                        {% endif %}
+                    </div>
+                    <ul class="list-group">
+                        <li class="list-group-item" style="padding-left: 5px"><span class="label label-success">INGRESOS - COMPRAS</span> </li>
+                    </ul>
+                    <div class="panel-body">
+                        {% if compras_dolar %}
+                            <table class="table table-bordered">
+                                {% for c in compras_dolar %}
+                                    <tr>
+                                        <td>{{ c.formapago }}:</td>
+                                        <td class="text-right">{{ c.total|floatformat:2 }} USD.</td>
+                                    </tr>
+                                {% endfor %}
+                                <tr>
+                                    <td class="text-right"><strong>Total:</strong></td>
+                                    <td class="text-right"><strong>{{ compras_total_dolar|floatformat:2 }} USD.</strong></td>
+                                </tr>
+                            </table>
+                        {% else %}
+                            <strong>No hay movimiento.</strong>
+                        {% endif %}
+                    </div>
+                    <ul class="list-group">
+                        <li class="list-group-item" style="padding-left: 5px"><span class="label label-info">INGRESOS - OTROS</span></li>
+                    </ul>
+                    <div class="panel-body">
+                        {% if ingresos_otros_dolar %}
+                            <table class="table table-bordered">
+                                {% for t in ingresos_otros_dolar %}
+                                    <tr>
+                                        <td>{{ t.formapago }} [{{ t.motivo }}]:</td>
+                                        <td class="text-right">{{ t.total }} USD.</td>
+                                    </tr>
+                                {% endfor %}
+                                <tr>
+                                    <td class="text-right"><strong>Total:</strong></td>
+                                    <td class="text-right"><strong>{{ ingresos_otros_total_dolar|floatformat:2 }} USD.</strong></td>
+                                </tr>
+                            </table>
+                        {% else %}
+                            <strong>No hay movimiento</strong>
+                        {% endif %}
+                    </div>
+                    <ul class="list-group">
+                        <li class="list-group-item" style="padding-left: 5px"><span class="label label-danger">EGRESOS</span> </li>
+                    </ul>
+                    <div class="panel-body" style="padding: 0px 5px">
+                        {% if egresos_dolar %}
+                            <table class="table table-bordered">
+                                {% for t in egresos_dolar %}
+                                    <tr>
+                                        <td>{{ t.formapago }}:</td>
+                                        <td class="text-right">{{ t.total }} USD.</td>
+                                    </tr>
+                                {% endfor %}
+                                <tr>
+                                    <td class="text-right"><strong>Total:</strong></td>
+                                    <td class="text-right"><strong>{{ egreso_total_dolar|floatformat:2 }} USD.</strong></td>
+                                </tr>
+                            </table>
+                        {% else %}
+                            <strong>No hay movimiento</strong>
+                        {% endif %}
+                    </div>
+                    <div class="panel-footer">
+                        <h4 style="margin-top: 0;"><span class="label label-info">RESUMEN GENERAL USD.</span></h4>
+
+                        <table class="table table-bordered">
+                            <tr>
+                                <td><strong>Ingreso Total:</strong></td>
+                                <td class="text-right"><strong>{{ ingreso_total_dolar|floatformat:2 }} USD.</strong></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Egreso Total:</strong></td>
+                                <td class="text-right"><strong>{{ egreso_total_dolar|floatformat:2 }} USD.</strong></td>
+                            </tr>
+                            <tr class="success">
+                                <td class="text-right text-warning"><strong>Saldo General:</strong></td>
+                                <td class="text-right text-warning"><strong><span id="saldo_total_dolar"> {{ saldo_dolar|floatformat:2 }}</span> USD.</strong></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div> <!-- /row de Ingreos y Egresos Gs y USD -->
+
+        <div class="row" id="detalle_tickets">  <!-- Detalle Tickets -->
+            <div class="col-lg-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">Detalles Tickets</div>
+                    <div class="table-responsive">
+                        <table class="table table-hover tablesorter" id="tabla_compras">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">ID</th>
+                                    <th class="text-center">Cliente</th>
+                                    <th class="text-center">Fecha</th>
+                                    <th class="text-center"># Paq</th>
+                                    <th class="text-center">Peso</th>
+                                    <th class="text-center" colspan="2">Pagos</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for t in tickets %}
+                                    <tr id="tr{{ t.id }}">
+                                        <td class="text-center" rowspan="{{ t.pago.count }}"><a href="{% url 'vista_detalle_ticket' t.id %}" target="_blank"> {{ t.id }}</a></td>
+                                        <td class="text-left" rowspan="{{ t.pago.count }}">{{ t.user.get_full_name }}</td>
+                                        <td class="text-left" rowspan="{{ t.pago.count }}">{{ t.fecha|date }}</td>
+                                        <td class="text-center" rowspan="{{ t.pago.count }}">{{ t.paquete.count }}</td>
+                                        <td class="text-right" rowspan="{{ t.pago.count }}">{{ t.peso_cobrado }}</td>
+                                        {% for p in t.pago.all %}
+                                            {% if forloop.first %}
+                                                {% if p.moneda.codigo == 'Gs' %}
+                                                    <td class="text-right">{{ p.monto|intcomma }} {{ p.moneda }}</td>
+                                                {% else %}
+                                                    <td class="text-right">{{ p.monto|floatformat:2 }} {{ p.moneda }}</td>
+                                                {% endif %}
+                                                <td class="text-left">{{ p.formapago }}</td>
+                                            {% else %}
+                                                <tr>
+                                                    {% if p.moneda.codigo == 'Gs' %}
+                                                        <td class="text-right">{{ p.monto|intcomma }} {{ p.moneda }}</td>
+                                                    {% else %}
+                                                        <td class="text-right">{{ p.monto|floatformat:2 }} {{ p.moneda }}</td>
+                                                    {% endif %}
+                                                    <td class="text-left">{{ p.formapago }}</td>
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" id="detalle_compras">  <!-- Detalle Compras -->
+            <div class="col-lg-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">Detalles Compras</div>
+                    <div class="table-responsive">
+                        <table class="table table-hover tablesorter" id="tabla_compras">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">ID</th>
+                                    <th class="text-center">Cliente</th>
+                                    <th class="text-center"># Compras</th>
+                                    <th class="text-center">Total Dolar</th>
+                                    <th class="text-center">Total Gs</th>
+                                    <th class="text-center">Fecha</th>
+                                    <th class="text-center" colspan="2">Pagos</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for c in compras %}
+                                    <tr id="tr{{ c.id }}">
+                                        <td class="text-center" rowspan="{{ c.pago.count }}"><a href="{% url 'vista_cotizar_pedido' c.id %}" target="_blank"> {{ c.id }}</a></td>
+                                        <td class="text-left" rowspan="{{ c.pago.count }}">{{ c.user.get_full_name }}</td>
+                                        <td class="text-center" rowspan="{{ c.pago.count }}">{{ c.detalle.count }}</td>
+                                        <td class="text-right" rowspan="{{ c.pago.count }}">{{ c.get_total_dolar }}</td>
+                                        <td class="text-right" rowspan="{{ c.pago.count }}">{{ c.get_total_gs|intcomma }}</td>
+                                        {% for p in c.pago.all %}
+                                            {% if forloop.first %}
+                                                <td class="text-left" rowspan="{{ c.pago.count }}">{{ p.created_at|date }}</td>
+                                                {% if p.moneda.codigo == 'Gs' %}
+                                                    <td class="text-right">{{ p.monto|intcomma }} {{ p.moneda }}</td>
+                                                {% else %}
+                                                    <td class="text-right">{{ p.monto|floatformat:2 }} {{ p.moneda }}</td>
+                                                {% endif %}
+                                                <td class="text-left">{{ p.formapago }}</td>
+                                            {% else %}
+                                                <tr>
+                                                    {% if p.moneda.codigo == 'Gs' %}
+                                                        <td class="text-right">{{ p.monto|intcomma }} {{ p.moneda }}</td>
+                                                    {% else %}
+                                                        <td class="text-right">{{ p.monto|floatformat:2 }} {{ p.moneda }}</td>
+                                                    {% endif %}
+                                                    <td class="text-left">{{ p.formapago }}</td>
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" id="detalle_egresos">  <!-- Detalle Egresos -->
+            <div class="col-lg-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">Detalles Egresos</div>
+                    <div class="table-responsive">
+                        <table class="table table-hover tablesorter" id="tabla_compras">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">ID</th>
+                                    <th class="text-center">Usuario</th>
+                                    <th class="text-center">Motivo</th>
+                                    <th class="text-center">Fecha</th>
+                                    <th class="text-center">Monto</th>
+                                    <th class="text-center">Comentario</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for e in egresos %}
+                                    <tr id="tr{{ e.id }}">
+                                        <td class="text-center"><a href="{% url 'vista_cotizar_pedido' c.id %}" target="_blank"> {{ e.id }}</a></td>
+                                        <td class="text-left">{{ e.user.get_full_name }}</td>
+                                        <td class="text-left">{{ e.motivo }}</td>
+                                        <td class="text-right">{{ e.created_at|date }}</td>
+                                        {% if e.moneda.codigo == 'Gs' %}
+                                            <td class="text-right">{{ e.monto|intcomma }} {{ e.moneda }}</td>
+                                        {% else %}
+                                            <td class="text-right">{{ e.monto|floatformat:2 }} {{ e.moneda }}</td>
+                                        {% endif %}
+                                        <td class="text-left">{{ e.descripcion }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" id="detalle_ingresos_otros">  <!-- Detalle Ingresos Otros -->
+            <div class="col-lg-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">Detalles Ingresos Otros</div>
+                    <div class="table-responsive">
+                        <table class="table table-hover tablesorter" id="tabla_compras">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">ID</th>
+                                    <th class="text-center">Usuario</th>
+                                    <th class="text-center">Motivo</th>
+                                    <th class="text-center">Fecha</th>
+                                    <th class="text-center">Monto</th>
+                                    <th class="text-center">Comentario</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for e in ingresos_otros %}
+                                    <tr id="tr{{ e.id }}">
+                                        <td class="text-center"><a href="{% url 'vista_cotizar_pedido' c.id %}" target="_blank"> {{ e.id }}</a></td>
+                                        <td class="text-left">{{ e.user.get_full_name }}</td>
+                                        <td class="text-left">{{ e.motivo }}</td>
+                                        <td class="text-right">{{ e.created_at|date }}</td>
+                                        {% if e.moneda.codigo == 'Gs' %}
+                                            <td class="text-right">{{ e.monto|intcomma }} {{ e.moneda }}</td>
+                                        {% else %}
+                                            <td class="text-right">{{ e.monto|floatformat:2 }} {{ e.moneda }}</td>
+                                        {% endif %}
+                                        <td class="text-left">{{ e.descripcion }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+{% endblock %}
+{% block extra_script %}
+    <script type="text/javascript" src="/media/js/sugar.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $("#detalle_tickets").hide();
+            $("#detalle_compras").hide();
+            $("#detalle_egresos").hide();
+            $("#detalle_ingresos_otros").hide();
+        });
+        $("#detalle_tickets_ver").click(function(){
+            $("#detalle_compras").hide();
+            $("#detalle_egresos").hide();
+            $("#detalle_ingresos_otros").hide();
+            $("#detalle_tickets").show();
+            $('html,body').animate({scrollTop: $("#detalle_tickets").offset().top},'slow');
+        });
+        $("#detalle_compras_ver").click(function(){
+            $("#detalle_tickets").hide();
+            $("#detalle_egresos").hide();
+            $("#detalle_ingresos_otros").hide();
+            $("#detalle_compras").show();
+            $('html,body').animate({scrollTop: $("#detalle_compras").offset().top},'slow');
+        });
+        $("#detalle_egresos_ver").click(function(){
+            $("#detalle_tickets").hide();
+            $("#detalle_compras").hide();
+            $("#detalle_ingresos_otros").hide();
+            $("#detalle_egresos").show();
+            $('html,body').animate({scrollTop: $("#detalle_egresos").offset().top},'slow');
+        });
+        $("#detalle_ingresos_otros_ver").click(function(){
+            $("#detalle_tickets").hide();
+            $("#detalle_compras").hide();
+            $("#detalle_egresos").hide();
+            $("#detalle_ingresos_otros").show();
+            $('html,body').animate({scrollTop: $("#detalle_ingresos_otros").offset().top},'slow');
+        });
+    </script>
+{% endblock %}

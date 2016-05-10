@@ -1,0 +1,66 @@
+{% extends "basebs.html" %}
+{% load bootstrap3 %}
+{% load humanize %}
+
+{% block content %}
+    {% if manifiestos %}
+        <div class="row">
+            <div class="col-lg-6">
+                <h4>Lista de Manifiestos</h4>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th class="text-center">ID</th>
+                                <th class="text-center">Origen</th>
+                                <th class="text-center">Fecha Arribo</th>
+                                <th class="text-center">Cant Bolsas</th>
+                                <th class="text-center">Cant Paquetes</th>
+                                <th class="text-center">Peso</th>
+                                <th class="text-center"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for m in manifiestos %}
+                                <tr>
+                                    <td class="text-left">{{ m.id }}</td>
+                                    <td class="text-left">{{ m.origen }}</td>
+                                    <td class="text-center">{{ m.fecha_arribo|date:"d M Y" }}</td>
+                                    <td class="text-right">{{ m.bolsa_cantidad }}</td>
+                                    <td class="text-right">{{ m.paquete.count }}</td>
+                                    <td class="text-right">{{ m.bolsa_peso }} Kg.</td>
+                                    <td>
+                                        <a href="{% url 'vista_detalle_manifiesto' m.id %}" role="button" class="btn btn-primary btn-sm"><i class="fa fa-pencil"></i> Detalle</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div><!-- /.row -->
+
+        <ul class="pagination">
+            {% if manifiestos.has_previous %}
+                <li><a href="?page={{ manifiestos.previous_page_number }}">&laquo;</a></li>
+            {% endif %}
+            {% for i in manifiestos.paginator.page_range %}
+                <li {% if manifiestos.number == i %} class="active" {% endif %}><a href="?page={{i}}">{{i}}</a></li>
+            {% endfor %}
+            {% if manifiestos.has_next %}
+                <li><a href="?page={{ manifiestos.next_page_number }}">&raquo;</a></li>
+            {% endif %}
+        </ul>
+    {% else %}
+        <div class="row">
+            <div class="col-lg-6">
+                <h3>No hay Manifiestos</h3>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

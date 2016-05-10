@@ -1,0 +1,138 @@
+{% extends "basebs.html" %}
+{% load bootstrap3 %}
+{% load humanize %}
+
+{% block extra_head %}
+    <style type="text/css" title="currentStyle">
+        @import "/media/css/table/jquery.dataTables.css";
+    </style>
+{% endblock %}
+
+{% block content %}
+    {% if clientes %}
+        <!-- Modal -->
+        <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">Eliminar Compra</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>¿Desea eliminar la Orden de Compra Nro. <span id="modal_name"></span> de <span id="modal_user"></span>?</p>
+                        <p>No se podrá rehacer esta acción</p>
+                    </div>
+                    <div class="modal-footer">
+                        <form method="post" id="frmEliminarCompra" action="">
+                            {% csrf_token %}
+                            <input type="hidden" id="modal_idCompra" name="compra_id">
+                            <button class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-danger">Eliminar</button>
+                        </form>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+
+
+        <div class="row">
+            <div class="col-lg-3">
+                <h4>Lista de Clientes</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-2">
+                <li class="list-group-item"><span class="badge">{{ paquetes.count }}</span> Total Paquetes</li>
+            </div>
+            <div class="col-lg-2">
+                <li class="list-group-item"><span class="badge">{{ noentregado }}</span> Paquetes en Asunción (NE)</li>
+            </div>
+            <div class="col-lg-2">
+                <li class="list-group-item"><span class="badge">{{ delivery }}</span> Paquetes DELIVERY</li>
+            </div>
+            <div class="col-lg-2">
+                <li class="list-group-item"><span class="badge">{{ transito }}</span> Paquetes En tránsito</li>
+            </div>
+            <div class="col-lg-2">
+                <li class="list-group-item"><span class="badge">{{ miami }}</span> Paquetes en Miami</li>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-lg-12">
+            <form id="form">
+                <button type="submit">Submit form</button>
+                <div class="table-responsive">
+                {% url 'vista_enviar_mail' %}
+                    <table cellpadding="0" cellspacing="0" border="0" class="display" id="tablaFull" width="100%">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th class="text-center">Nombre Completo</th>
+                                <th class="text-center">Código</th>
+                                <th class="text-center">R.U.C.</th>
+                                <th class="text-center">Celular</th>
+                                <th class="text-center">Sucursal</th>
+                                <th class="text-center">Vendedor</th>
+                                <th class="text-center">Contrato?</th>
+                                <th class="text-center">Fecha Ingreso</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for c in clientes %}
+                                <tr>
+                                    <td class="text-center"><input type="checkbox" name="check{{ c.id }}" value="{{ c.id }}"></td>
+                                    <td class="text-left">{{ c.user.first_name |truncatechars:20 }} {{ c.user.last_name|truncatechars:20 }}</td>
+                                    <td class="text-left">{{ c.codigo }}</td>
+                                    <td class="text-left">{{ c.ruc }}</td>
+                                    <td class="text-right">{{ c.celular }}</td>
+                                    <td class="text-center">{{ c.sucursal }}</td>
+                                    <td class="text-center">{{ c.vendedor }}</td>
+                                    <td class="text-center">
+                                        {% if c.contrato %}
+                                            <div class="fa fa-check"></div>
+                                        {% else %}
+                                            <div class="fa fa-times"></div>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-center">{{ c.user.date_joined|date:"SHORT_DATE_FORMAT" }}</td>
+                                </tr>
+                            {% endfor %}
+{#                                <tr class="warning">#}
+{#                                    <td class="text-center" colspan="2"><strong>Cantidad Paquetes: {{ paquetes|length }} unid.</strong></td>#}
+{#                                    <td class="text-right"><strong>{{ peso|floatformat:2 }} Kg.</strong></td>#}
+{#                                    <td colspan="2"></td>#}
+{#                                    <td class="text-right"><strong>{{ costo_seguro|intcomma }} Gs.</strong></td>#}
+{#                                    <td class="text-center"></td>#}
+{#                                </tr>#}
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+            </div>
+        </div><!-- /.row -->
+    {% else %}
+        hola
+    {% endif %}
+    {% block extra_script %}
+{#        <script src="/media/js/table/jquery.tablesorter.js"></script>#}
+{#        <script src="/media/js/table/tables.js"></script>#}
+        <script src="/media/js/jquery-1-8-2.js"></script>
+        <script src="/media/js/table/jquery.dataTables.js"></script>
+        <script src="/media/js/table/datatables.js"></script>
+        <script type="text/javascript" charset="utf-8">
+			var oTable;
+
+			$(document).ready(function() {
+				$('#form').submit( function() {
+					var sData = oTable.$('input').serialize();
+					alert( "The following data would have been submitted to the server: \n\n"+sData );
+					return false;
+				} );
+
+				oTable = $('#tablaFull').dataTable();
+			} );
+		</script>
+
+    {% endblock %}
+{% endblock %}

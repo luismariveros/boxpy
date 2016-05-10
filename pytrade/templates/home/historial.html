@@ -1,0 +1,64 @@
+{% extends "base_lateral.html" %}
+
+{% block content-int %}
+<div class="twelve columns">
+    <div class="sidebar-right"><br /><br />
+        <p class="link-location">
+            Se encuentra:
+            <a href="{% url 'vista_inicio' %}">Inicio</a> /
+            <a href="{% url 'vista_profile' %}">Perfil</a> /
+            <a href="{% url 'vista_historial' %}">Historial</a>
+        </p>
+        {% if paquetes %}
+            <h5 class="semi">Historial de Paquetes</h5>
+            <div class="tabla">
+                <table>
+                    <tr>
+                        <td>ID</td>
+                        <td>Fecha</td>
+                        <td>Descripción</td>
+                        <td>Tracking</td>
+                        <td>Peso</td>
+                        <td>Estado</td>
+                    </tr>
+                    {% for p in paquetes %}
+                        <tr>
+                            <td>{{ p.id }}</td>
+                            <td>{{ p.fecha }}</td>
+                            <td>{{ p.descripcion }}</td>
+                            <td>{{ p.tracking }}</td>
+                            <td>{{ p.peso }} Kg.</td>
+                            <td>{{ p.ubicacion }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <br /><br />
+        {% else %}
+            <h5 class="semi">No hay Historial de Paquetes</h5>
+        {% endif %}
+
+        {% if compras %}
+            <h5 class="semi">Compras Pendientes</h5>
+            <div class="tabla">
+                <table>
+                    <tr>
+                        <td>ID</td>
+                        <td>Fecha</td>
+                        <td>Enlace</td>
+                    </tr>
+                    {% for c in compras %}
+                        <tr>
+                            <td>{{ c.id }}</td>
+                            <td>{{ c.fecha_compra }}</td>
+                            <td>{{ c.enlace|truncatechars:40 }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <br /><br />
+        {% endif %}
+        <br /><br />
+    </div>
+</div>
+{% endblock %}

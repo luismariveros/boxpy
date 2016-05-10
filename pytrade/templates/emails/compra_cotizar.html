@@ -1,0 +1,54 @@
+{% load i18n %}
+{% load url from future %}
+{% load humanize %}
+
+<p>Hola <strong>{{ user.first_name }} {{ user.last_name }}</strong>,</p>
+<p>A continuaci&oacute;n se remite la Cotizaci&oacute;n de la &Oacute;rden de Compra solicitada. Para confirmar la compra debe abonar la totalidad de la &Oacute;rden de Compra.</p>
+
+=========================<br />
+Resumen de la &Oacute;rden de Compra<br />
+=========================<br />
+<strong>Fecha Solicitud:</strong> {{ compra.fecha_solicitud }}<br />
+<strong>Valor Compra USD:</strong> {{ compra.valor_compra_dolar|floatformat:2 }} USD.<br />
+<strong>Comisi&oacute;n USD:</strong> {{ compra.comision_dolar|floatformat:2 }} USD.<br />
+<strong>TOTAL USD: {{ compra.get_total_dolar|floatformat:2 }} USD.</strong><br />
+<strong>TOTAL Gs: {{ compra.get_total_gs|intcomma }} Gs.</strong><br />
+<br />
+=================<br />
+Detalle de la Compra<br />
+=================<br />
+{% for d in compra.detalle.all %}
+    <p><strong>---- PRODUCTO {{ forloop.counter }}</strong></p>
+    <strong>-URL del Producto:</strong> {{ d.enlace }}<br />
+    <strong>-Descripci&oacute;n:</strong> {{ d.descripcion }}<br />
+    <strong>-Comentario:</strong> {{ d.comentario }}<br />
+    <strong>-Producto:</strong> {{ d.valor_producto }} USD.<br />
+    <strong>-Impuesto:</strong> {{ d.valor_impuesto }} USD.<br />
+    <strong>-Envio Interno:</strong> {{ d.valor_envio_interno }} USD.<br />
+    <strong>-TOTAL PRODUCTO USD: {{ d.valor_dolar|floatformat:2 }} USD.</strong><br />
+    <strong>-TOTAL PRODUCTO Gs: {{ d.valor_gs|intcomma }} Gs.</strong><br />
+{% endfor %}
+
+<p><strong>Observaciones:</strong></p>
+<ul>
+    <li>La cotizaci&oacute;n no incluye el flete de USA a Paraguay.</li>
+    <li>Para confirmar la compra debe abonar la totalidad de la &Oacute;rden de Compra.</li>
+    <li>La &Oacute;rden de Compra está sujeta a la disponibilidad del producto y que el costo de la misma puede variar.</li>
+</ul>
+<p><strong>Formas de Pago:</strong></p>
+<ol>
+    <li>Efectivo D&oacute;lares/Guaran&iacute;es en la Oficina.</li>
+    <li>Cheque personal D&oacute;lares/Guaran&iacute;es en la Oficina.</li>
+    <li>Dep&oacute;sito en Cuenta Corriente del Banco Visi&oacute;n. <strong>Denominación</strong>: PYTRADE SRL <strong>Cuenta D&oacute;lares</strong>: 90037508/6. <strong>Cuenta Guaran&iacute;es</strong>: 90037506/2.</li>
+    <li>Transferencias Interbancarias al Banco Visi&oacute;n. Mismos Nros. de Cuentas y el <strong>R.U.C</strong>: 80081294-8.</li>
+    <li>Giros TIGO al <a href="tel:+595983900411">0983 900-411</a>.</li>
+</ol>
+
+<p><strong>Para los casos 3, 4 y 5 enviar por <a href="mailto:info@pytrade.com.py">mail</a> o al <a href="tel:+595983900411">Whatsap</a> constancia del Pago.</strong></p>
+
+<p>
+    ---<br />
+    <img src="http://www.pytrade.com.py/media/images/logo-chico.png" alt="PyTrade S.R.L."><br />
+    San Benigno 995 c/ Federaci&oacute;n Rusa<br />
+    Asunci&oacute;n - Paraguay
+</p>

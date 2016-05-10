@@ -1,0 +1,32 @@
+{% extends "base_lateral.html" %}
+
+{% block content-int %}
+<div class="contact twelve columns">
+    <div class="standard-form compressed">
+        <h4 class="semi">Ingresa a tu cuenta PyTrade</h4>
+        <div class="sociaLogin">
+            <a id="facebook-login" href="{% url 'social:begin' "facebook" %}" class="btn-auth btn-facebook large">Login con Facebook</a><br />
+        </div>
+
+        <br />
+        <h3 class="semi">- O -</h3>
+
+        {% if error %}
+            <div class="form-result">
+                <p class="note error">{{ error }}</p>
+            </div>
+        {% endif %}
+        <form action="" id="registro" method="POST" style="margin-bottom:40%;">
+            {% csrf_token %}
+            <table>
+                {{ form.as_table }}
+            </table>
+            <div class="submit">
+                <button type="submit" class="btn-orange" >Ingresar</button>
+            </div>
+            <h5><a href="{% url "password_reset_recover" %}">¿Olvidaste tu contraseña?</a></h5>
+        </form>
+        <div class="clear"></div>
+    </div>
+</div>
+{% endblock %}

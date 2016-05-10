@@ -1,0 +1,47 @@
+{% extends "base_lateral.html" %}
+
+{% block content-int %}
+<div class="twelve columns">
+    <div class="sidebar-right"><br /><br />
+        <h5 class="title">Servicios</h5>
+        <blockquote class="full">
+            <p>Nos dedicamos al transporte aéreo y marítimo de todo tipo de carga, desde los Estados Unidos hasta Paraguay. Nuestra especialidad: servicio puerta a puerta desde Estados Unidos.</p>
+            <p>Con nuestro servicio puerta a puerta todas sus compras llegan a sus manos directamente. Así usted no se preocupa por ningún trámite adicional o cargo extra.</p>
+            <p>Contamos con una oficina en Estados Unidos, con personal preparado y con experiencia en la industria.
+                Todos ellos han completado cursos y aprobado normas de la TSA (Transportation Security Administration).
+            </p>
+            <p><strong>Nuestro Servicio Aéreo incluye:</strong></p>
+            <ul>
+                <li><img src="/media/images/favicon.ico" style="width:8px;height:8px;"/>  1 Carga Semanal desde USA a Asunción.</li>
+                <li><img src="/media/images/favicon.ico" style="width:8px;height:8px;"/>  Servicio de verificación de compra en origen.</li>
+                <li><img src="/media/images/favicon.ico" style="width:8px;height:8px;"/>  Investigación y asesoramiento sobre proveedores en cuanto a confianza y cumplimiento.</li>
+                <li><img src="/media/images/favicon.ico" style="width:8px;height:8px;"/>  Servicio de despacho.</li>
+                <li><img src="/media/images/favicon.ico" style="width:8px;height:8px;"/>  Servicio de Seguro.</li>
+            </ul>
+            <p><strong>Servicio Marítimo:</strong></p>
+            <ul>
+                <li>  <strong style="color: #808080"> Address</strong>: 4256 NW 35th Ct</li>
+                <li>  <strong style="color: #808080"> City</strong>: Miami</li>
+                <li>  <strong style="color: #808080"> State</strong>: Florida (FL)</li>
+                <li>  <strong style="color: #808080"> ZIP Code</strong>: 33142</li>
+                <li>  <strong style="color: #808080"> Phone</strong>: (786) 226-1255</li>
+            </ul>
+        </blockquote>
+        <a name="servicio-compramos"> <h5 class="title">Compramos por Vos</h5></a>
+        <blockquote class="full">
+            <p>Si no posees una Tarjeta de Crédito y/o no quieres utilizar la que tienes, utiliza nuestro servicio <strong>"Compramos por Vos".</strong></p>
+            <p>Le recordamos que contamos con cuenta de PayPal, por lo que tus compras en <a href="http://www.ebay.com/">eBay</a> son posibles.</p>
+            <p><h5>El costo de este servicio es de 10% del valor total de la Orden de Compra.</h5></p>
+            <p><strong>¿Cómo funciona?</strong></p>
+            <ol>
+                <li style="margin-bottom: 4px;">Seleccionar el producto deseado a través de alguna tienda virtual. <a href="{% url 'vista_tiendas' %}">Ver más tiendas</a></li>
+                <li style="margin-bottom: 4px;"><a href="{% url 'vista_login' %}">Acceder </a> a tu cuenta de PyTrade. Si no tienes, crea una. <a href="{% url 'vista_registrar' %}">Regístrate</a> .</li>
+                <li style="margin-bottom: 4px;">Copiar el enlace o URL de la página web y pegar en el campo Enlace.</li>
+                <li style="margin-bottom: 4px;">Es obligatorio completar la <strong>descripción corta</strong> (Reloj, Billetera, Electronica, etc) y un <strong>comentario sobre el producto</strong> (color, medida, modelo, etc).</li>
+                <li style="margin-bottom: 4px;">Pasar por nuestra oficina y abonar el 100% del costo total de la Orden de Compra.</li>
+                <li style="margin-bottom: 4px;">Al retirar el producto, se abonará el costo del envío.</li>
+            </ol>
+        </blockquote>
+    </div>
+</div>
+{% endblock %}

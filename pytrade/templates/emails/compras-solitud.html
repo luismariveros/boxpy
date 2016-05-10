@@ -1,0 +1,16 @@
+{% load i18n %}
+{% load url from future %}
+
+<p>Se ha registrado una solicitud de compra desde el Servicio "Compramos por Vos" de PyTrade.</p>
+
+<p>Clic para cotizar <a href="http://www.pytrade.com.py{% url 'vista_cotizar_pedido' compra.id %}">aquí</a> </p>
+=================<br />
+Datos del Cliente<br />
+=================<br />
+<strong>Nombre:</strong> PT{{ cliente.codigo }} - {{ cliente.user.get_full_name }}<br />
+<strong>Email:</strong> {{ cliente.user.email }}<br />
+<strong>Celular:</strong> {{ cliente.celular }}<br />
+<strong>Cédula:</strong> {{ cliente.cedula }}<br />
+{% if cliente.telefono %}
+    <strong>Teléfono:</strong>{{ cliente.telefono }}<br />
+{% endif %}
